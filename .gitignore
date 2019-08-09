@@ -15,3 +15,6 @@ node_modules/
 build/
 
 FarMenu.ini
+
+bundle.js
+bundle.js.map
