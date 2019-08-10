@@ -1,7 +1,7 @@
 import {arrEventTypes} from '../data/event-types';
 import {arrPlaces} from '../data/places';
 
-export const getEventItemHTML = function ({type, place, dtBeg, dtEnd, duration, price}) {
+export const getEventItemHTML = ({type, place, dtBeg, dtEnd, duration, price}) => {
   const evt = arrEventTypes.find((item) => {
     return item.id === type;
   });

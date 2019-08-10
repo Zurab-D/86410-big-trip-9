@@ -8,20 +8,20 @@ import {getEventEditHTML} from './components/event-edit';
 import {getEventItemHTML} from './components/event-item';
 
 // import data
-// import {arrEventType} from './data/event-types';
-// import {arrPlaces} from './data/places';
 import {arrTripDays} from './data/days';
 import {arrTripEvents} from './data/events';
 
 (function () {
   // consts for renderElem function (values for param "place")
-  // const beforeBegin = `beforeBegin`;
-  const afterBegin = `afterBegin`;
-  const beforeEnd = `beforeEnd`;
-  const afterEnd = `afterEnd`;
+  const where = {
+    beforeBegin: `beforeBegin`,
+    afterBegin: `afterBegin`,
+    beforeEnd: `beforeEnd`,
+    afterEnd: `afterEnd`
+  };
 
   // render element function
-  const renderElem = function (elem, htmlCode, place = beforeEnd) {
+  const renderElem = function (elem, htmlCode, place = where.beforeEnd) {
     elem.insertAdjacentHTML(place, htmlCode);
   };
 
@@ -34,10 +34,10 @@ import {arrTripEvents} from './data/events';
   const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
 
   // trip
-  renderElem(elemTripInfo, getTripHTML(`Amsterdam &mdash; ... &mdash; Amsterdam`, `Mar 18&nbsp;&mdash;&nbsp;22`), afterBegin);
+  renderElem(elemTripInfo, getTripHTML(`Amsterdam &mdash; ... &mdash; Amsterdam`, `Mar 18&nbsp;&mdash;&nbsp;22`), where.afterBegin);
 
   // menu
-  renderElem(elemTripControlsH, getMenuHTML(), afterEnd);
+  renderElem(elemTripControlsH, getMenuHTML(), where.afterEnd);
 
   // filters
   renderElem(elemTripControls, getFilterHTML());
@@ -50,35 +50,29 @@ import {arrTripEvents} from './data/events';
   tripDays.className = `trip-days`;
 
   // days
-  arrTripDays.forEach((daysItem, di) => {
+  arrTripDays.forEach((day, dayItndex) => {
     // day info
-    renderElem(tripDays, getTripDayHTML(daysItem));
+    renderElem(tripDays, getTripDayHTML(day));
     const days = tripDays.querySelectorAll(`.day`);
-    const day = days[days.length - 1];
-
-    // create event list
-    const eventList = document.createElement(`ul`);
-    eventList.className = `trip-events__list`;
-    day.append(eventList);
+    const dayElem = days[days.length - 1];
+    const eventList = dayElem.querySelector(`.trip-events__list`);
 
     // events
     arrTripEvents
       // get events for current day
-      .filter((eventsItem) => {
-        return eventsItem.day === daysItem.id;
-      })
-      .forEach((item, ei) => {
+      .filter((eventsItem) => eventsItem.day === day.id)
+      .forEach((event, eventIndex) => {
         // LI for event
         const eventsItem = document.createElement(`li`);
         eventsItem.className = `trip-events__item`;
         eventList.append(eventsItem);
 
         // render event item
-        renderElem(eventsItem, getEventItemHTML(item));
-
-        if (di === 0 && ei === 0) {
+        if (dayItndex === 0 && eventIndex === 0) {
           // event edit
-          renderElem(eventsItem, getEventEditHTML(), beforeEnd);
+          renderElem(eventsItem, getEventEditHTML(), where.beforeEnd);
+        } else {
+          renderElem(eventsItem, getEventItemHTML(event));
         }
       });
   });
