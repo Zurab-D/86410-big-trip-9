@@ -1,29 +1,28 @@
-  // consts for renderElem function (values for param "place")
-  export const where = {
-    beforeBegin: `beforeBegin`,
-    afterBegin: `afterBegin`,
-    beforeEnd: `beforeEnd`,
-    afterEnd: `afterEnd`
-  };
+// consts for renderElem function (values for param "place")
+export const where = {
+  beforeBegin: `beforeBegin`,
+  afterBegin: `afterBegin`,
+  beforeEnd: `beforeEnd`,
+  afterEnd: `afterEnd`
+};
 
-  // render element function
-  export const renderElem = function (elem, htmlCode, place = where.beforeEnd) {
-    elem.insertAdjacentHTML(place, htmlCode);
-  };
+// render element function
+export const renderElem = function (elem, htmlCode, place = where.beforeEnd) {
+  elem.insertAdjacentHTML(place, htmlCode);
+};
 
-  // get unique elements of array
-  export const uniqueArray = function (arr) {
-    let result = [];
+// get unique elements of array
+export const uniqueArray = function (arr) {
+  let result = [];
 
-    for (let str of arr) {
-      if (!result.includes(str)) {
-        result.push(str);
-      }
+  for (let str of arr) {
+    if (!result.includes(str)) {
+      result.push(str);
     }
-
-    return result;
   }
 
+  return result;
+};
 
 // formate date to "dd.mm.yy hh:mi"
 export const formatDate = function (date) {
@@ -67,10 +66,10 @@ export const randomDate = function (startDate, endDate, startHour, endHour) {
 // calc total price
 export const getTotalCost = function name(events) {
   return events.reduce((previousValue, event) => {
-      return previousValue +
+    return previousValue +
       event.price +
-      event.offers.reduce((prevOffersSum, offer) => prevOffersSum + offer.price, 0)
-    },
-    0
+      event.offers.reduce((prevOffersSum, offer) => prevOffersSum + offer.price, 0);
+  },
+  0
   );
 };
