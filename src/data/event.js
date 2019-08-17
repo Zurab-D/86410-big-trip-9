@@ -1,45 +1,19 @@
-'use strict';
-
 import {arrEventTypes} from './event-types';
-import {arrPlaces} from './places';
-
-function randomDate(start, end, startHour, endHour) {
-  var date = new Date(+start + Math.random() * (end - start));
-  var hour = startHour + Math.random() * (endHour - startHour) | 0;
-  date.setHours(hour);
-  return date;
-};
+import {setPlaces} from './places';
+import {arrOffers} from './offers';
+import {randomDate} from '../utils';
 
 export const getEvent = () => ({
-  type: new Set(arrEventTypes.sort(() => 0.5 - Math.random()).slice(0, 1)),
-  place: arrPlaces[Math.floor(Math.random() * arrPlaces.length)],
-  dateBegin: randomDate(new Date('01.01.2019'), new Date('01.04.2019'), 12, 12).getTime(),
-  duration: ((Math.floor(Math.random() * (120 - 30 + 1)) + 30) * 60 * 1000),
-  price: (Math.random() * (1000-20) + 20),
-  offers: [{
-    name: `Add luggage`,
-    price: 10,
-    selected: Boolean(Math.round(Math.random()))
-  }, {
-    name: `Switch to comfort class`,
-    price: 150,
-    selected: Boolean(Math.round(Math.random()))
-  }, {
-    name: `Add meal`,
-    price: 2,
-    selected: Boolean(Math.round(Math.random()))
-  }, {
-    name: `Choose seats`,
-    price: 9,
-    selected: Boolean(Math.round(Math.random()))
-  }, {
-    name: `Travel by train`,
-    price: 40,
-    selected: Boolean(Math.round(Math.random()))
-  }].slice(0, Math.floor(Math.random() * 3)),
-  photos: (new Array(22)).
+  type: arrEventTypes.sort(() => 0.5 - Math.random()).slice(0, 1)[0],
+  place: Array.from(setPlaces)[Math.floor(Math.random() * setPlaces.size)],
+  dateBegin: randomDate(new Date(`01.01.2019`), new Date(`01.04.2019`), 12, 12).getTime(),
+  duration: ((Math.floor(Math.random() * (120 - 30 + 1)) + 30) * 60 * 1000), // miliseconds
+  price: Math.floor(Math.random() * (200 - 20) + 20),
+  offers: arrOffers.slice(0, Math.floor(Math.random() * 3)),
+  photos: new Array(22).
       fill().
-      map((item, i) => i+1).
+      map((item, i) => i + 1 + `.jpg`).
       sort(() => 0.5 - Math.random()).
-      slice(0, Math.random() * (7-2) + 2)
+      slice(0, Math.random() * (7 - 2) + 2),
+  favorite: Boolean(Math.round(Math.random()) * 0.5)
 });

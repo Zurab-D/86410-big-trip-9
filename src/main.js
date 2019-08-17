@@ -6,10 +6,7 @@ import {getSortHTML} from './components/sort';
 import {getTripDayHTML} from './components/trip-day';
 import {getEventEditHTML} from './components/event-edit';
 import {getEventItemHTML} from './components/event-item';
-
-// import data
-import {arrTripDays} from './data/days';
-import {arrTripEvents} from './data/events';
+import {getEvent} from './data/event';
 
 (function () {
   // consts for renderElem function (values for param "place")
@@ -24,6 +21,19 @@ import {arrTripEvents} from './data/events';
   const renderElem = function (elem, htmlCode, place = where.beforeEnd) {
     elem.insertAdjacentHTML(place, htmlCode);
   };
+
+  // get unique elements of array
+  function uniqueArray(arr) {
+    let result = [];
+
+    for (let str of arr) {
+      if (!result.includes(str)) {
+        result.push(str);
+      }
+    }
+
+    return result;
+  }
 
   const elemTripMain = document.querySelector(`.page-header .trip-main`);
   const elemTripInfo = elemTripMain.querySelector(`.trip-info`);
@@ -49,10 +59,20 @@ import {arrTripEvents} from './data/events';
   const tripDays = document.createElement(`ul`);
   tripDays.className = `trip-days`;
 
+
+  const EVENT_COUNT = 10;
+  const arrTripEvents = new Array(EVENT_COUNT).fill().map(getEvent);
+
+  window.arrTripEvents = arrTripEvents;
+
+  // array of trip days
+  const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
+
+
   // days
   arrTripDays.forEach((day, dayItndex) => {
     // day info
-    renderElem(tripDays, getTripDayHTML(day));
+    renderElem(tripDays, getTripDayHTML(day, dayItndex + 1));
     const days = tripDays.querySelectorAll(`.day`);
     const dayElem = days[days.length - 1];
     const eventList = dayElem.querySelector(`.trip-events__list`);
@@ -60,7 +80,7 @@ import {arrTripEvents} from './data/events';
     // events
     arrTripEvents
       // get events for current day
-      .filter((eventsItem) => eventsItem.day === day.id)
+      .filter((eventsItem) => new Date(eventsItem.dateBegin).setHours(0, 0, 0, 0) === new Date(day).setHours(0, 0, 0, 0))
       .forEach((event, eventIndex) => {
         // LI for event
         const eventsItem = document.createElement(`li`);
@@ -70,7 +90,7 @@ import {arrTripEvents} from './data/events';
         // render event item
         if (dayItndex === 0 && eventIndex === 0) {
           // event edit
-          renderElem(eventsItem, getEventEditHTML(), where.beforeEnd);
+          renderElem(eventsItem, getEventEditHTML(event), where.beforeEnd);
         } else {
           renderElem(eventsItem, getEventItemHTML(event));
         }
