@@ -147,7 +147,7 @@ export const getEventEditHTML = ({type, place, description, dateBegin, duration,
           <div class="event__photos-container">
             <div class="event__photos-tape">
             ${photos.map((photo) => `
-              <img class="event__photo" src="img/photos/${photo}" alt="Event photo">
+              <img class="event__photo" src="${photo}" alt="Event photo">
             `).join(``)}
             </div>
           </div>` : ``
