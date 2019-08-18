@@ -34,7 +34,7 @@ export const arrEventTypes = [{
   icon: `check-in.png`
 }, {
   name: `Sightseeng`,
-  actionName: ``,
+  actionName: `Sightseeng at`,
   icon: `sightseeing.png`
 }, {
   name: `Restaurant`,

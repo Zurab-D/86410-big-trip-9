@@ -8,7 +8,7 @@ import {getEventEditHTML} from './components/event-edit';
 import {getEventItemHTML} from './components/event-item';
 import {getEvent} from './data/event';
 
-import {where, renderElem, uniqueArray, getTotalCost} from './utils';
+import {where, renderElem, uniqueArray} from './utils';
 
 const elemTripMain = document.querySelector(`.trip-main`);
 const elemTripInfo = elemTripMain.querySelector(`.trip-info`);
@@ -17,11 +17,12 @@ const elemTripControlsH = elemTripControls.querySelector(`h2.visually-hidden`);
 const elemPageMain = document.querySelector(`.page-main`);
 const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
 
-const EVENT_COUNT = 10;
-const arrTripEvents = new Array(EVENT_COUNT).fill().map(getEvent);
+const EVENT_COUNT = 6;
+const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent)).
+  sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
 
 // trip
-renderElem(elemTripInfo, getTripHTML(`Amsterdam &mdash; ... &mdash; Amsterdam`, `Mar 18&nbsp;&mdash;&nbsp;22`, getTotalCost(arrTripEvents)));
+renderElem(elemTripInfo, getTripHTML(arrTripEvents));
 
 // menu
 renderElem(elemTripControlsH, getMenuHTML(), where.afterEnd);

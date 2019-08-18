@@ -1,11 +1,11 @@
-import {formatDate} from '../utils';
+import {formatDate, getDurationHours, getDurationMinutes} from '../utils';
 
 export const getEventItemHTML = ({type, place, dateBegin, duration, price, offers}) => `
   <div class="event">
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type.icon}" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type.actionName} ${place}</h3>
+    <h3 class="event__title">${type.actionName} ${place.name}</h3>
 
     <div class="event__schedule">
       <p class="event__time">
@@ -13,7 +13,7 @@ export const getEventItemHTML = ({type, place, dateBegin, duration, price, offer
         &mdash;
         <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(new Date(dateBegin + duration))}</time>
       </p>
-      <p class="event__duration">${Math.floor(duration / 1000 / 60 / 60)}h ${(duration / 1000 / 60 % 60)}m</p>
+      <p class="event__duration">${getDurationHours(duration)}h ${getDurationMinutes(duration)}m</p>
     </div>
 
     <p class="event__price">

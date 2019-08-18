@@ -1,11 +1,11 @@
 // List of places
 
-export const setPlaces = new Set([
-  `Amsterdam`,
-  `Geneva`,
-  `Chamonix`,
-  `Saint Petersburg`,
-  `airport`,
-  `hotel`,
-  `Natural History Museum`,
-]);
+export const arrPlaces = [
+  {name: `Amsterdam`, type: `sity`},
+  {name: `Geneva`, type: `sity`},
+  {name: `Chamonix`, type: `sity`},
+  {name: `Saint Petersburg`, type: `sity`},
+  {name: `airport`, type: `airport`},
+  {name: `hotel`, type: `hotel`},
+  {name: `Natural History Museum`, type: `museum`},
+];

@@ -1,3 +1,21 @@
+const arrMonthNames = [
+  `Jan`,
+  `Feb`,
+  `Mar`,
+  `Apr`,
+  `May`,
+  `Jun`,
+  `Jul`,
+  `Aug`,
+  `Sep`,
+  `Oct`,
+  `Nov`,
+  `Dec`,
+];
+
+// date to string short format
+export const getDateStrShort = (date) => arrMonthNames[(new Date(date)).getMonth()] + ` ` + (new Date(date)).getDate();
+
 // consts for renderElem function (values for param "place")
 export const where = {
   beforeBegin: `beforeBegin`,
@@ -7,12 +25,12 @@ export const where = {
 };
 
 // render element function
-export const renderElem = function (elem, htmlCode, place = where.beforeEnd) {
+export const renderElem = (elem, htmlCode, place = where.beforeEnd) => {
   elem.insertAdjacentHTML(place, htmlCode);
 };
 
 // get unique elements of array
-export const uniqueArray = function (arr) {
+export const uniqueArray = (arr) => {
   let result = [];
 
   for (let str of arr) {
@@ -25,8 +43,7 @@ export const uniqueArray = function (arr) {
 };
 
 // formate date to "dd.mm.yy hh:mi"
-export const formatDate = function (date) {
-
+export const formatDate = (date) => {
   let dd = date.getDate();
   if (dd < 10) {
     dd = `0` + dd;
@@ -63,13 +80,50 @@ export const randomDate = function (startDate, endDate, startHour, endHour) {
   return date;
 };
 
-// calc total price
-export const getTotalCost = function name(events) {
-  return events.reduce((previousValue, event) => {
-    return previousValue +
-      event.price +
-      event.offers.reduce((prevOffersSum, offer) => prevOffersSum + offer.price, 0);
-  },
-  0
-  );
+export const getDurationHours = (durationMiliseconds) => Math.floor(durationMiliseconds / 1000 / 60 / 60);
+
+export const getDurationMinutes = (durationMiliseconds) => durationMiliseconds / 1000 / 60 % 60;
+
+// get trip title
+export const getTripTitle = (arrTripEvents) => {
+  return arrTripEvents.
+    filter((event) => event.place.type === `sity`).
+    map((event) => event.place.name).
+    reduce((previousValue, sity, idx, arr) => {
+      if (idx === 0) {
+        if (arr.length === 1) {
+          return sity + ` &mdash; ` + sity;
+        }
+        return sity;
+      }
+
+      if (arr.length <= 3) {
+        return previousValue + ` &mdash; ` + sity;
+      } else {
+        if (idx === arr.length - 1) {
+          return previousValue + ` &mdash; ... &mdash; ` + sity;
+        } else {
+          return previousValue;
+        }
+      }
+    }, ``);
 };
+
+// get trip dates
+export const getTripTitleDates = (arrTripEvents) => {
+  return arrTripEvents.reduce((previousValue, event, idx, arr) => {
+    if (idx === 0) {
+      return getDateStrShort(event.dateBegin);
+    }
+    if (idx === arr.length - 1) {
+      return previousValue + ` &mdash; ` + getDateStrShort(event.dateBegin);
+    }
+    return previousValue;
+  }, ``);
+};
+
+// calc total price
+export const getTotalCost = (events) =>
+  events.reduce((previousValue, event) =>
+    previousValue + event.price + event.offers.reduce((prevOffersSum, offer) =>
+      prevOffersSum + offer.price, 0), 0);

@@ -1,7 +1,7 @@
 import {formatDate} from '../utils';
-import {setPlaces} from '../data/places';
+import {arrPlaces} from '../data/places';
 
-export const getEventEditHTML = ({type, place, dateBegin, duration, price, offers, photos, favorite}) => `
+export const getEventEditHTML = ({type, place, description, dateBegin, duration, price, offers, photos, favorite}) => `
   <form class="event  event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -76,10 +76,10 @@ export const getEventEditHTML = ({type, place, dateBegin, duration, price, offer
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type.actionName}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${place.name}" list="destination-list-1">
         <datalist id="destination-list-1">
-          ${Array.from(setPlaces).map((placeItem) => `
-          <option value="${placeItem}"></option>
+          ${arrPlaces.map((placeItem) => `
+          <option value="${placeItem.name}"></option>
           `).join(``)}
         </datalist>
       </div>
@@ -142,7 +142,7 @@ export const getEventEditHTML = ({type, place, dateBegin, duration, price, offer
 
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+        <p class="event__destination-description">${description}</p>
         ${photos.length > 0 ? `
           <div class="event__photos-container">
             <div class="event__photos-tape">
