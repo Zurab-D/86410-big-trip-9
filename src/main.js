@@ -6,77 +6,67 @@ import {getSortHTML} from './components/sort';
 import {getTripDayHTML} from './components/trip-day';
 import {getEventEditHTML} from './components/event-edit';
 import {getEventItemHTML} from './components/event-item';
+import {getEvent} from './data/event';
 
-// import data
-import {arrTripDays} from './data/days';
-import {arrTripEvents} from './data/events';
+import {where, renderElem, uniqueArray} from './utils';
 
-(function () {
-  // consts for renderElem function (values for param "place")
-  const where = {
-    beforeBegin: `beforeBegin`,
-    afterBegin: `afterBegin`,
-    beforeEnd: `beforeEnd`,
-    afterEnd: `afterEnd`
-  };
+const elemTripMain = document.querySelector(`.trip-main`);
+const elemTripInfo = elemTripMain.querySelector(`.trip-info`);
+const elemTripControls = elemTripMain.querySelector(`.trip-controls`);
+const elemTripControlsH = elemTripControls.querySelector(`h2.visually-hidden`);
+const elemPageMain = document.querySelector(`.page-main`);
+const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
 
-  // render element function
-  const renderElem = function (elem, htmlCode, place = where.beforeEnd) {
-    elem.insertAdjacentHTML(place, htmlCode);
-  };
+const EVENT_COUNT = 6;
+const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent)).
+  sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
 
-  const elemTripMain = document.querySelector(`.page-header .trip-main`);
-  const elemTripInfo = elemTripMain.querySelector(`.trip-info`);
-  const elemTripControls = elemTripMain.querySelector(`.trip-controls`);
-  const elemTripControlsH = elemTripControls.querySelector(`h2.visually-hidden`);
+// trip
+renderElem(elemTripInfo, getTripHTML(arrTripEvents));
 
-  const elemPageMain = document.querySelector(`.page-main`);
-  const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
+// menu
+renderElem(elemTripControlsH, getMenuHTML(), where.afterEnd);
 
-  // trip
-  renderElem(elemTripInfo, getTripHTML(`Amsterdam &mdash; ... &mdash; Amsterdam`, `Mar 18&nbsp;&mdash;&nbsp;22`), where.afterBegin);
+// filters
+renderElem(elemTripControls, getFilterHTML());
 
-  // menu
-  renderElem(elemTripControlsH, getMenuHTML(), where.afterEnd);
+// sort
+renderElem(elemTripEvents, getSortHTML());
 
-  // filters
-  renderElem(elemTripControls, getFilterHTML());
+// create tip days element
+const tripDays = document.createElement(`ul`);
+tripDays.className = `trip-days`;
 
-  // sort
-  renderElem(elemTripEvents, getSortHTML());
+// array of trip days
+const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
 
-  // create tip days element
-  const tripDays = document.createElement(`ul`);
-  tripDays.className = `trip-days`;
+// days
+arrTripDays.forEach((day, dayItndex) => {
+  // day info
+  renderElem(tripDays, getTripDayHTML(day, dayItndex + 1));
+  const days = tripDays.querySelectorAll(`.day`);
+  const dayElem = days[days.length - 1];
+  const eventList = dayElem.querySelector(`.trip-events__list`);
 
-  // days
-  arrTripDays.forEach((day, dayItndex) => {
-    // day info
-    renderElem(tripDays, getTripDayHTML(day));
-    const days = tripDays.querySelectorAll(`.day`);
-    const dayElem = days[days.length - 1];
-    const eventList = dayElem.querySelector(`.trip-events__list`);
+  // events
+  arrTripEvents
+    // get events for current day
+    .filter((eventsItem) => new Date(eventsItem.dateBegin).setHours(0, 0, 0, 0) === new Date(day).setHours(0, 0, 0, 0))
+    .forEach((event, eventIndex) => {
+      // LI for event
+      const eventsItem = document.createElement(`li`);
+      eventsItem.className = `trip-events__item`;
+      eventList.append(eventsItem);
 
-    // events
-    arrTripEvents
-      // get events for current day
-      .filter((eventsItem) => eventsItem.day === day.id)
-      .forEach((event, eventIndex) => {
-        // LI for event
-        const eventsItem = document.createElement(`li`);
-        eventsItem.className = `trip-events__item`;
-        eventList.append(eventsItem);
+      // render event item
+      if (dayItndex === 0 && eventIndex === 0) {
+        // event edit
+        renderElem(eventsItem, getEventEditHTML(event), where.beforeEnd);
+      } else {
+        renderElem(eventsItem, getEventItemHTML(event));
+      }
+    });
+});
 
-        // render event item
-        if (dayItndex === 0 && eventIndex === 0) {
-          // event edit
-          renderElem(eventsItem, getEventEditHTML(), where.beforeEnd);
-        } else {
-          renderElem(eventsItem, getEventItemHTML(event));
-        }
-      });
-  });
-
-  // append days to page
-  elemTripEvents.append(tripDays);
-})();
+// append days to page
+elemTripEvents.append(tripDays);

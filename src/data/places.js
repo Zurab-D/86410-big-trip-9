@@ -1,24 +1,11 @@
 // List of places
 
-export const arrPlaces = [{
-  id: 1,
-  name: `Amsterdam`
-}, {
-  id: 2,
-  name: `Geneva`
-}, {
-  id: 3,
-  name: `Chamonix`
-}, {
-  id: 4,
-  name: `Saint Petersburg`
-}, {
-  id: 5,
-  name: `airport`
-}, {
-  id: 6,
-  name: `hotel`
-}, {
-  id: 7,
-  name: `Natural History Museum`
-}];
+export const arrPlaces = [
+  {name: `Amsterdam`, type: `sity`},
+  {name: `Geneva`, type: `sity`},
+  {name: `Chamonix`, type: `sity`},
+  {name: `Saint Petersburg`, type: `sity`},
+  {name: `airport`, type: `airport`},
+  {name: `hotel`, type: `hotel`},
+  {name: `Natural History Museum`, type: `museum`},
+];
