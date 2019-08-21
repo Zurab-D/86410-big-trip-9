@@ -17,6 +17,8 @@ const elemTripControls = elemTripMain.querySelector(`.trip-controls`);
 const elemTripControlsH = elemTripControls.querySelector(`h2.visually-hidden`);
 const elemPageMain = document.querySelector(`.page-main`);
 const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
+const tripDays = elemTripEvents.querySelector(`.trip-days`);
+
 
 const EVENT_COUNT = 6;
 const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent)).
@@ -32,14 +34,7 @@ render(elemTripControlsH, (new Menu()).element, Position.afterEnd);
 render(elemTripControls, (new Filter()).element);
 
 // sort
-render(elemTripEvents, (new Sort()).element);
-
-// create tip days html element
-const tripDays = document.createElement(`ul`);
-tripDays.className = `trip-days`;
-
-// array of trip days
-const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
+render(tripDays, (new Sort()).element, Position.beforeBegin);
 
 // --- render a day with events ------------------------
 const renderTripDay = (day, dayIndex) => {
@@ -90,6 +85,12 @@ const renderTripDay = (day, dayIndex) => {
 
           unrender(eventEdit.element);
           eventEdit.removeElement();
+
+          // remove event from events array
+          arrTripEvents.splice(arrTripEvents.indexOf(event), 1)
+
+          // render events
+          renderAllEvents();
         });
 
       Array.from(eventEdit.element.querySelectorAll(`input`)).forEach((elem) => {
@@ -104,13 +105,20 @@ const renderTripDay = (day, dayIndex) => {
     });
 };
 
-// render all days
-if (arrTripDays.length) {
-  arrTripDays.forEach(renderTripDay);
-} else {
-  // no event found
-  render(elemTripEvents, (new NoPoints()).element);
-}
+function renderAllEvents() {
+    tripDays.innerHTML = ``;
 
-// append days to page
-elemTripEvents.append(tripDays);
+    // array of trip days
+    const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
+
+    // render all days
+    if (arrTripDays.length) {
+      arrTripDays.forEach(renderTripDay);
+    } else {
+      // no event found
+      render(elemTripEvents, (new NoPoints()).element);
+    };
+};
+
+// run
+renderAllEvents();
