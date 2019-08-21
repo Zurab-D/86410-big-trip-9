@@ -6,6 +6,7 @@ import {Sort} from './components/sort';
 import {TripDay} from './components/trip-day';
 import {EventEdit} from './components/event-edit';
 import {EventItem} from './components/event-item';
+import {NoPoints} from './components/no-points';
 import {getEvent} from './data/event';
 
 import {render, unrender, Position, uniqueArray} from './utils';
@@ -40,8 +41,8 @@ tripDays.className = `trip-days`;
 // array of trip days
 const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
 
-// days
-arrTripDays.forEach((day, dayIndex) => {
+// --- render a day with events ------------------------
+const renderTripDay = (day, dayIndex) => {
   // day info
   render(tripDays, (new TripDay(day, dayIndex + 1)).element);
 
@@ -101,7 +102,15 @@ arrTripDays.forEach((day, dayIndex) => {
         });
       });
     });
-});
+};
+
+// render all days
+if (arrTripDays.length) {
+  arrTripDays.forEach(renderTripDay);
+} else {
+  // no event found
+  render(elemTripEvents, (new NoPoints()).element);
+}
 
 // append days to page
 elemTripEvents.append(tripDays);
