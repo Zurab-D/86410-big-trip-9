@@ -87,7 +87,7 @@ const renderTripDay = (day, dayIndex) => {
           eventEdit.removeElement();
 
           // remove event from events array
-          arrTripEvents.splice(arrTripEvents.indexOf(event), 1)
+          arrTripEvents.splice(arrTripEvents.indexOf(event), 1);
 
           // render events
           renderAllEvents();
@@ -106,19 +106,19 @@ const renderTripDay = (day, dayIndex) => {
 };
 
 function renderAllEvents() {
-    tripDays.innerHTML = ``;
+  tripDays.innerHTML = ``;
 
-    // array of trip days
-    const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
+  // array of trip days
+  const arrTripDays = uniqueArray(arrTripEvents.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
 
-    // render all days
-    if (arrTripDays.length) {
-      arrTripDays.forEach(renderTripDay);
-    } else {
-      // no event found
-      render(elemTripEvents, (new NoPoints()).element);
-    };
-};
+  // render all days
+  if (arrTripDays.length) {
+    arrTripDays.forEach(renderTripDay);
+  } else {
+    // no event found
+    render(elemTripEvents, (new NoPoints()).element);
+  }
+}
 
 // run
 renderAllEvents();
