@@ -1,3 +1,40 @@
+// consts for renderElem function (values for param "position")
+export const Position = {
+  beforeBegin: `beforeBegin`,
+  afterBegin: `afterBegin`,
+  beforeEnd: `beforeEnd`,
+  afterEnd: `afterEnd`
+};
+
+export const render = (container, element, position = Position.beforeEnd) => {
+  switch (position) {
+    case Position.beforeBegin:
+      container.before(element);
+      break;
+    case Position.afterBegin:
+      container.prepend(element);
+      break;
+    case Position.beforeEnd:
+      container.append(element);
+      break;
+    case Position.afterEnd:
+      container.after(element);
+      break;
+  }
+};
+
+export const unrender = (element) => {
+  if (element) {
+    element.remove();
+  }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
 const arrMonthNames = [
   `Jan`,
   `Feb`,
@@ -15,19 +52,6 @@ const arrMonthNames = [
 
 // date to string short format
 export const getDateStrShort = (date) => arrMonthNames[(new Date(date)).getMonth()] + ` ` + (new Date(date)).getDate();
-
-// consts for renderElem function (values for param "place")
-export const where = {
-  beforeBegin: `beforeBegin`,
-  afterBegin: `afterBegin`,
-  beforeEnd: `beforeEnd`,
-  afterEnd: `afterEnd`
-};
-
-// render element function
-export const renderElem = (elem, htmlCode, place = where.beforeEnd) => {
-  elem.insertAdjacentHTML(place, htmlCode);
-};
 
 // get unique elements of array
 export const uniqueArray = (arr) => {
@@ -83,47 +107,3 @@ export const randomDate = function (startDate, endDate, startHour, endHour) {
 export const getDurationHours = (durationMiliseconds) => Math.floor(durationMiliseconds / 1000 / 60 / 60);
 
 export const getDurationMinutes = (durationMiliseconds) => durationMiliseconds / 1000 / 60 % 60;
-
-// get trip title
-export const getTripTitle = (arrTripEvents) => {
-  return arrTripEvents.
-    filter((event) => event.place.type === `sity`).
-    map((event) => event.place.name).
-    reduce((previousValue, sity, idx, arr) => {
-      if (idx === 0) {
-        if (arr.length === 1) {
-          return sity + ` &mdash; ` + sity;
-        }
-        return sity;
-      }
-
-      if (arr.length <= 3) {
-        return previousValue + ` &mdash; ` + sity;
-      } else {
-        if (idx === arr.length - 1) {
-          return previousValue + ` &mdash; ... &mdash; ` + sity;
-        } else {
-          return previousValue;
-        }
-      }
-    }, ``);
-};
-
-// get trip dates
-export const getTripTitleDates = (arrTripEvents) => {
-  return arrTripEvents.reduce((previousValue, event, idx, arr) => {
-    if (idx === 0) {
-      return getDateStrShort(event.dateBegin);
-    }
-    if (idx === arr.length - 1) {
-      return previousValue + ` &mdash; ` + getDateStrShort(event.dateBegin);
-    }
-    return previousValue;
-  }, ``);
-};
-
-// calc total price
-export const getTotalCost = (events) =>
-  events.reduce((previousValue, event) =>
-    previousValue + event.price + event.offers.reduce((prevOffersSum, offer) =>
-      prevOffersSum + offer.price, 0), 0);

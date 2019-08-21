@@ -15,7 +15,7 @@ export const getEvent = () => ({
   offers: arrOffers.slice(0, Math.floor(Math.random() * 3)),
   photos: new Array(22).
       fill().
-      map((item, i) => i + 1 + `.jpg`).
+      map(() => `http://picsum.photos/300/150?r=${Math.random()}`).
       sort(() => 0.5 - Math.random()).
       slice(0, Math.random() * (7 - 2) + 2),
   favorite: Boolean(Math.round(Math.random()) * 0.5)
