@@ -64,15 +64,16 @@ export class TripController {
 
         const onEscKeyDown = (evt) => {
           if (evt.key === `Escape` || evt.key === `Esc`) {
-            eventList.replaceChild(eventItem.element, eventEdit.element);
             document.removeEventListener(`keydown`, onEscKeyDown);
+            eventList.replaceChild(eventItem.element, eventEdit.element);
           }
         };
 
         eventItem.element.querySelector(`.event__rollup-btn`).
           addEventListener(`click`, () => {
             eventList.replaceChild(eventEdit.element, eventItem.element);
-            document.addEventListener(`keydown`, onEscKeyDown);
+            document.addEventListener(`keydown`, onEscKeyDown/* F(eventList, eventItem, eventEdit) */);
+
           });
 
         eventEdit.element.
@@ -107,6 +108,7 @@ export class TripController {
 
           elem.addEventListener(`blur`, () => {
             document.addEventListener(`keydown`, onEscKeyDown);
+
           });
         });
       });
