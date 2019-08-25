@@ -1,5 +1,5 @@
 // utils
-import {render, unrender, Position, getDateStrShort, uniqueArray} from './utils';
+import {render, unrender, Position, uniqueArray} from './utils';
 
 // import components
 import {Trip} from './components/trip';
@@ -44,7 +44,7 @@ export class TripController {
   }
 
   // method: render a day with events
-  renderTripDay (day, dayIndex) {
+  renderTripDay(day, dayIndex) {
     // day info
     render(this.tripDays, (new TripDay(day, dayIndex + 1)).element);
 
@@ -110,7 +110,7 @@ export class TripController {
           });
         });
       });
-  };
+  }
 
   // method: rendfer all events
   renderAllEvents() {
