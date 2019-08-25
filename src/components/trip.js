@@ -1,20 +1,11 @@
-import {createElement, getDateStrShort} from '../utils';
+import {AbstractComponent} from './AbstractComponent';
 
-export class Trip {
+import {getDateStrShort} from '../utils';
+
+export class Trip extends AbstractComponent {
   constructor(arrTripEvents) {
+    super();
     this._arrTripEvents = arrTripEvents;
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this.template);
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   get tripTitle() {

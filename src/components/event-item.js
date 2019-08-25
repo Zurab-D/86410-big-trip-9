@@ -1,26 +1,16 @@
-import {createElement, formatDate, getDurationHours, getDurationMinutes} from '../utils';
+import {AbstractComponent} from './AbstractComponent';
 
-export class EventItem {
+import {formatDate, getDurationHours, getDurationMinutes} from '../utils';
+
+export class EventItem extends AbstractComponent {
   constructor({type, place, dateBegin, duration, price, offers}) {
+    super();
     this._type = type;
     this._place = place;
     this._dateBegin = dateBegin;
     this._duration = duration;
     this._price = price;
     this._offers = offers;
-    this._element = null;
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this.template);
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   get template() {

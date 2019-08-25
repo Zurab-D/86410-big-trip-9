@@ -9,22 +9,18 @@ import {EventItem} from './components/event-item';
 import {NoPoints} from './components/no-points';
 import {getEvent} from './data/event';
 
-import {render, unrender, Position, uniqueArray} from './utils';
+import {TripController} from './TripController';
 
-const elemTripMain = document.querySelector(`.trip-main`);
-const elemTripInfo = elemTripMain.querySelector(`.trip-info`);
-const elemTripControls = elemTripMain.querySelector(`.trip-controls`);
-const elemTripControlsH = elemTripControls.querySelector(`h2.visually-hidden`);
-const elemPageMain = document.querySelector(`.page-main`);
-const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
-const tripDays = elemTripEvents.querySelector(`.trip-days`);
-
+const pageBody = document.querySelector(`.page-body`);
 
 const EVENT_COUNT = 6;
 const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent)).
   sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
 
-// trip
+const tripController = new TripController(pageBody, arrTripEvents);
+tripController.init();
+
+/* // trip
 render(elemTripInfo, (new Trip(arrTripEvents)).element);
 
 // menu
@@ -122,3 +118,4 @@ function renderAllEvents() {
 
 // run
 renderAllEvents();
+ */
