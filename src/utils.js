@@ -53,17 +53,14 @@ const arrMonthNames = [
 // date to string short format
 export const getDateStrShort = (date) => arrMonthNames[(new Date(date)).getMonth()] + ` ` + (new Date(date)).getDate();
 
-// get unique elements of array
-export const uniqueArray = (arr) => {
-  let result = [];
-
-  for (let str of arr) {
-    if (!result.includes(str)) {
-      result.push(str);
+export const uniqueDays = (events) => {
+  return events.reduce((prevValue, event) => {
+    if (!prevValue[prevValue.length - 1] || prevValue[prevValue.length - 1] !== truncDT(event.dateBegin)) {
+      prevValue.push(truncDT(event.dateBegin));
     }
-  }
-
-  return result;
+    event.dayIndex = prevValue.length - 1;
+    return prevValue;
+  }, []);
 };
 
 // formate date to "dd.mm.yy hh:mi"
@@ -107,3 +104,5 @@ export const randomDate = function (startDate, endDate, startHour, endHour) {
 export const getDurationHours = (durationMiliseconds) => Math.floor(durationMiliseconds / 1000 / 60 / 60);
 
 export const getDurationMinutes = (durationMiliseconds) => durationMiliseconds / 1000 / 60 % 60;
+
+export const truncDT = (ms) => new Date(ms).setHours(0, 0, 0, 0);

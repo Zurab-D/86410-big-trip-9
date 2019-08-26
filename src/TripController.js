@@ -1,5 +1,5 @@
 // utils
-import {render, unrender, Position, uniqueArray} from './utils';
+import {render, unrender, Position, uniqueDays} from './utils';
 
 // import components
 import {Trip} from './components/trip';
@@ -39,24 +39,23 @@ export class TripController {
     // sort
     render(this.tripDays, (new Sort()).element, Position.beforeBegin);
 
+    // events for sort elements
     this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
       itemSort.addEventListener(`click`, () => {
-          switch (itemSort.dataset.sort) {
-            case `event`:
-              this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
-              break;
+        switch (itemSort.dataset.sort) {
+          case `event`:
+            this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
+            break;
+          case `time`:
+            this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+            break;
+          case `price`:
+            this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
+            break;
+        }
 
-            case `time`:
-                this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
-              break;
-
-            case `price`:
-                this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
-              break;
-          };
-
-          this.renderAllEvents();
-      })
+        this.renderAllEvents();
+      });
     });
 
     // run
@@ -65,7 +64,7 @@ export class TripController {
 
   // method: render eventA day with events
   renderTripDay(day, dayIndex, days) {
-    const i = days.slice(0).sort().indexOf(day);
+    const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
     // day info
     render(this.tripDays, (new TripDay(day, i + 1)).element);
 
@@ -76,7 +75,7 @@ export class TripController {
     // events
     this._events
       // get events for current day
-      .filter((eventsItem) => new Date(eventsItem.dateBegin).setHours(0, 0, 0, 0) === new Date(day).setHours(0, 0, 0, 0))
+      .filter((eventsItem) => eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
         const eventEdit = new EventEdit(event);
         const eventItem = new EventItem(event);
@@ -140,7 +139,7 @@ export class TripController {
     this.tripDays.innerHTML = ``;
 
     // array of trip days
-    const arrTripDays = uniqueArray(this._events.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0))))/* .sort() */;
+    const arrTripDays = uniqueDays(this._events);
 
     // render all days
     if (arrTripDays.length) {
