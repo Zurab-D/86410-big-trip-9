@@ -39,17 +39,38 @@ export class TripController {
     // sort
     render(this.tripDays, (new Sort()).element, Position.beforeBegin);
 
+    this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
+      itemSort.addEventListener(`click`, () => {
+          switch (itemSort.dataset.sort) {
+            case `event`:
+              this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
+              break;
+
+            case `time`:
+                this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+              break;
+
+            case `price`:
+                this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
+              break;
+          };
+
+          this.renderAllEvents();
+      })
+    });
+
     // run
     this.renderAllEvents();
   }
 
-  // method: render a day with events
-  renderTripDay(day, dayIndex) {
+  // method: render eventA day with events
+  renderTripDay(day, dayIndex, days) {
+    const i = days.slice(0).sort().indexOf(day);
     // day info
-    render(this.tripDays, (new TripDay(day, dayIndex + 1)).element);
+    render(this.tripDays, (new TripDay(day, i + 1)).element);
 
-    const days = this.tripDays.querySelectorAll(`.day`);
-    const dayElem = days[days.length - 1];
+    const daysEl = this.tripDays.querySelectorAll(`.day`);
+    const dayElem = daysEl[daysEl.length - 1];
     const eventList = dayElem.querySelector(`.trip-events__list`);
 
     // events
@@ -119,7 +140,7 @@ export class TripController {
     this.tripDays.innerHTML = ``;
 
     // array of trip days
-    const arrTripDays = uniqueArray(this._events.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0)))).sort();
+    const arrTripDays = uniqueArray(this._events.map((event) => (new Date(event.dateBegin).setHours(0, 0, 0, 0))))/* .sort() */;
 
     // render all days
     if (arrTripDays.length) {
