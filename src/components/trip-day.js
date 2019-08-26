@@ -1,21 +1,12 @@
-import {createElement, getDateStrShort} from '../utils';
+import {AbstractComponent} from './AbstractComponent';
 
-export class TripDay {
+import {getDateStrShort} from '../utils';
+
+export class TripDay extends AbstractComponent {
   constructor(day, dayIndex) {
+    super();
     this._day = day;
     this._dayIndex = dayIndex;
-    this._element = null;
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this.template);
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
     this._element = null;
   }
 

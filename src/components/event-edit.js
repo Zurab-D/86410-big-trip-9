@@ -1,8 +1,12 @@
-import {createElement, formatDate} from '../utils';
+import {AbstractComponent} from './AbstractComponent';
+
+import {formatDate} from '../utils';
+
 import {arrPlaces} from '../data/places';
 
-export class EventEdit {
+export class EventEdit extends AbstractComponent {
   constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}) {
+    super();
     this._type = type;
     this._place = place;
     this._description = description;
@@ -12,19 +16,6 @@ export class EventEdit {
     this._offers = offers;
     this._photos = photos;
     this._favorite = favorite;
-    this._element = null;
-  }
-
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this.template);
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   get template() {
