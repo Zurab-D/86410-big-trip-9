@@ -72,8 +72,7 @@ export class TripController {
         eventItem.element.querySelector(`.event__rollup-btn`).
           addEventListener(`click`, () => {
             eventList.replaceChild(eventEdit.element, eventItem.element);
-            document.addEventListener(`keydown`, onEscKeyDown/* F(eventList, eventItem, eventEdit) */);
-
+            document.addEventListener(`keydown`, onEscKeyDown);
           });
 
         eventEdit.element.
