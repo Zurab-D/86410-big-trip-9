@@ -87,6 +87,7 @@ export class TripController {
 
         eventEdit.element.
           addEventListener(`reset`, () => {
+            document.removeEventListener(`keydown`, onEscKeyDown);
             unrender(eventItem.element);
             eventItem.removeElement();
 
