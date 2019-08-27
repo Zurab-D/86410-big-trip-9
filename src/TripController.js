@@ -140,6 +140,8 @@ export class TripController {
 
     // array of trip days
     const arrTripDays = uniqueDays(this._events);
+    console.log(arrTripDays);
+
 
     // render all days
     if (arrTripDays.length) {
