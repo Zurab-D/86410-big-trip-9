@@ -1,5 +1,5 @@
 // utils
-import {render, unrender, Position, uniqueDays} from './utils';
+import {render, unrender, Position, uniqueDays, SortTypes} from './utils';
 
 // import components
 import {Trip} from './components/trip';
@@ -28,7 +28,7 @@ export class TripController {
     this.tripDays = this.elemTripEvents.querySelector(`.trip-days`);
 
     // trip
-    render(this.elemTripInfo, (new Trip(this._events)).element);
+    render(this.elemTripMain, (new Trip(this._events)).element, Position.afterBegin);
 
     // menu
     render(this.elemTripControlsH, (new Menu()).element, Position.afterEnd);
@@ -43,13 +43,13 @@ export class TripController {
     this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
       itemSort.addEventListener(`click`, () => {
         switch (itemSort.dataset.sort) {
-          case `event`:
+          case SortTypes.event:
             this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
             break;
-          case `time`:
+          case SortTypes.time:
             this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
             break;
-          case `price`:
+          case SortTypes.price:
             this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
             break;
         }
