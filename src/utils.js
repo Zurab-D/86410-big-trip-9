@@ -1,3 +1,9 @@
+export const SortTypes = {
+  event: `event`,
+  time: `time`,
+  price: `price`
+};
+
 // consts for renderElem function (values for param "position")
 export const Position = {
   beforeBegin: `beforeBegin`,
@@ -106,9 +112,3 @@ export const getDurationHours = (durationMiliseconds) => Math.floor(durationMili
 export const getDurationMinutes = (durationMiliseconds) => durationMiliseconds / 1000 / 60 % 60;
 
 export const truncDT = (ms) => new Date(ms).setHours(0, 0, 0, 0);
-
-export const SortTypes = {
-  event: `event`,
-  time: `time`,
-  price: `price`
-};

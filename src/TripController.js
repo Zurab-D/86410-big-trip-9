@@ -11,10 +11,18 @@ import {EventEdit} from './components/event-edit';
 import {EventItem} from './components/event-item';
 import {NoPoints} from './components/no-points';
 
+import {PointController} from './PointController';
+
 export class TripController {
   constructor(container, events) {
     this._container = container;
     this._events = events;
+
+    this._subscriptions = [];
+		this._onChangeView = this._onChangeView.bind(this);
+		this._onDataChange = this._onDataChange.bind(this);
+
+    this.init();
   }
 
   // method: init
@@ -77,60 +85,8 @@ export class TripController {
       // get events for current day
       .filter((eventsItem) => eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
-        const eventEdit = new EventEdit(event);
-        const eventItem = new EventItem(event);
-
-        render(eventList, eventItem.element);
-
-        const onEscKeyDown = (evt) => {
-          if (evt.key === `Escape` || evt.key === `Esc`) {
-            document.removeEventListener(`keydown`, onEscKeyDown);
-            eventList.replaceChild(eventItem.element, eventEdit.element);
-          }
-        };
-
-        eventItem.element.querySelector(`.event__rollup-btn`).
-          addEventListener(`click`, () => {
-            eventList.replaceChild(eventEdit.element, eventItem.element);
-            document.addEventListener(`keydown`, onEscKeyDown);
-          });
-
-        eventEdit.element.
-          addEventListener(`submit`, () => {
-            eventList.replaceChild(eventItem.element, eventEdit.element);
-          });
-
-        eventEdit.element.querySelector(`.event__rollup-btn`).
-          addEventListener(`click`, () => {
-            eventList.replaceChild(eventItem.element, eventEdit.element);
-          });
-
-        eventEdit.element.
-          addEventListener(`reset`, () => {
-            document.removeEventListener(`keydown`, onEscKeyDown);
-            unrender(eventItem.element);
-            eventItem.removeElement();
-
-            unrender(eventEdit.element);
-            eventEdit.removeElement();
-
-            // remove event from events array
-            this._events.splice(this._events.indexOf(event), 1);
-
-            // render events
-            this.renderAllEvents();
-          });
-
-        Array.from(eventEdit.element.querySelectorAll(`input`)).forEach((elem) => {
-          elem.addEventListener(`focus`, () => {
-            document.removeEventListener(`keydown`, onEscKeyDown);
-          });
-
-          elem.addEventListener(`blur`, () => {
-            document.addEventListener(`keydown`, onEscKeyDown);
-
-          });
-        });
+        const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
+        this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
   }
 
@@ -140,15 +96,23 @@ export class TripController {
 
     // array of trip days
     const arrTripDays = uniqueDays(this._events);
-    console.log(arrTripDays);
-
 
     // render all days
     if (arrTripDays.length) {
-      arrTripDays.forEach(this.renderTripDay.bind(this));
+      arrTripDays.forEach( this.renderTripDay.bind(this) );
     } else {
       // no event found
       render(this.elemTripEvents, (new NoPoints()).element);
     }
   }
+
+	_onChangeView() {
+		this._subscriptions.forEach((item) => item());
+	}
+
+  _onDataChange(newData, oldData) {
+		this._events[this._events.findIndex((item) => item === oldData)] = newData;
+    //this._renderBoard(this._events);
+    this.renderAllEvents();
+	}
 }

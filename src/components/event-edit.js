@@ -20,7 +20,7 @@ export class EventEdit extends AbstractComponent {
 
   get template() {
     return `<li class="trip-events__item">
-    <form class="event  event--edit" action="#" method="post">
+    <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -146,8 +146,8 @@ export class EventEdit extends AbstractComponent {
             <div class="event__available-offers">
             ${this._offers.map((offer) => `
               <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" ${offer.selected ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-${offer.id}-1">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer" value="${offer.id}" ${offer.selected ? `checked` : ``}>
+                <label class="event__offer-label" for="event-offer-${offer.id}">
                   <span class="event__offer-title">${offer.name}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
