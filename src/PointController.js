@@ -1,7 +1,10 @@
-import {render, unrender, Position, uniqueDays, SortTypes} from './utils';
+import {strToDate, render} from './utils';
 
 import {EventEdit} from './components/event-edit';
 import {EventItem} from './components/event-item';
+
+import {arrEventTypes} from './data/event-types';
+import {arrPlaces} from './data/places';
 
 export class PointController {
   constructor(container, data, onDataChange, onChangeView) {
@@ -46,15 +49,21 @@ export class PointController {
         }, {});
 
         const entry = {
-          place: formData.get(`event-destination`),
-          dateBegin: formData.get(`event-start-time`),
-          dateEnd: formData.get(`event-end-time`),
+          type: arrEventTypes.find((it) => it.name === formData.get(`event-type`)),
+          place: arrPlaces.find((it) => it.name === formData.get(`event-destination`)),
+          dateBegin: strToDate(formData.get(`event-start-time`)).getTime(),
+          duration: strToDate(formData.get(`event-end-time`)).getTime() - strToDate(formData.get(`event-start-time`)).getTime(),
           price: formData.get(`event-price`),
           favorite: formData.get(`event-favorite`) === `checked` ? true : false,
-          offers: formData.getAll(`event-offer`).reduce((prev, item) => {
-            prev[item] = true;
-            return prev;
-          }, offersObj),
+          offers: formData.getAll(`event-offer`)
+            .reduce((prev, dataItem) => {
+              const offerItem = prev.find((item) => item.id === dataItem);
+
+              offerItem.selected = true;
+              return prev;
+            }, this._data.offers.map((it) => {
+              it.selected = false; return it
+            })),
         };
 
         this._onDataChange(entry, this._data);
@@ -98,8 +107,8 @@ export class PointController {
   }
 
   setDefaultView() {
-    if (this._container.element.contains(this._pointEdit.element)) {
-      this._container.element.replaceChild(this._taskView.element, this._taskEdit.element);
+    if (this._container.contains(this._pointEdit.element)) {
+      this._container.replaceChild(this._taskView.element, this._taskEdit.element);
     }
   }
 }

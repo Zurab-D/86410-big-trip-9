@@ -70,7 +70,7 @@ export class TripController {
     this.renderAllEvents();
   }
 
-  // method: render eventA day with events
+  // method: render event day with events
   renderTripDay(day, dayIndex, days) {
     const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
     // day info
@@ -111,8 +111,7 @@ export class TripController {
 	}
 
   _onDataChange(newData, oldData) {
-		this._events[this._events.findIndex((item) => item === oldData)] = newData;
-    //this._renderBoard(this._events);
+		Object.assign(this._events[this._events.findIndex((item) => item === oldData)], newData);
     this.renderAllEvents();
 	}
 }

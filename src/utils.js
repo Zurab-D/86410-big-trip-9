@@ -99,6 +99,36 @@ export const formatDate = (date) => {
   return dd + `.` + mm + `.` + yy + ` ` + hh + `:` + mi;
 };
 
+export const strToDate = (str) => {
+  let dt = new Date();
+  str.split(` `).forEach((item, idx) => {
+    if (idx === 0) {
+      item.split(`.`).forEach((it, i) => {
+        switch (i) {
+          case 0:
+            dt.setDate(+it);
+            break;
+          case 1:
+            dt.setMonth(it - 1);
+            break;
+          case 2:
+            dt.setFullYear(+(`20`+it));
+            break;
+        }
+      })
+    } else {
+      item.split(`:`).forEach((it, i) => {
+        if (i === 0) {
+          dt.setHours(+it);
+        } else {
+          dt.setMinutes(+it);
+        }
+      })
+    }
+  });
+  return dt;
+};
+
 // get random date
 export const randomDate = function (startDate, endDate, startHour, endHour) {
   const date = new Date(startDate.getTime() + Math.random() * (endDate - startDate));
