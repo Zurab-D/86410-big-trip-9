@@ -1,4 +1,4 @@
-import {strToDate, render} from './utils';
+import {strToDate, render, unrender} from './utils';
 
 import {EventEdit} from './components/event-edit';
 import {EventItem} from './components/event-item';
@@ -9,12 +9,12 @@ import {arrPlaces} from './data/places';
 export class PointController {
   constructor(container, data, onDataChange, onChangeView) {
     this._container = container;
-		this._data = data;
+    this._data = data;
     this._pointEdit = new EventEdit(data);
     this._pointView = new EventItem(data);
 
-		this._onChangeView = onChangeView;
-		this._onDataChange = onDataChange;
+    this._onChangeView = onChangeView;
+    this._onDataChange = onDataChange;
 
     this._init();
   }
@@ -43,11 +43,6 @@ export class PointController {
 
         const formData = new FormData(this._pointEdit.element.querySelector(`.event--edit`));
 
-        const offersObj = this._data.offers.reduce((result, offer) => {
-          result[offer.id] = false;
-          return result;
-        }, {});
-
         const entry = {
           type: arrEventTypes.find((it) => it.name === formData.get(`event-type`)),
           place: arrPlaces.find((it) => it.name === formData.get(`event-destination`)),
@@ -62,7 +57,8 @@ export class PointController {
               offerItem.selected = true;
               return prev;
             }, this._data.offers.map((it) => {
-              it.selected = false; return it
+              it.selected = false;
+              return it;
             })),
         };
 
@@ -78,7 +74,7 @@ export class PointController {
         this._container.replaceChild(this._pointView.element, this._pointEdit.element);
       });
 
-    /* this._pointEdit.element.
+    this._pointEdit.element.
       addEventListener(`reset`, () => {
         document.removeEventListener(`keydown`, onEscKeyDown);
 
@@ -88,12 +84,9 @@ export class PointController {
         unrender(this._pointEdit.element);
         this._pointEdit.removeElement();
 
-        // remove event from events array
-        // this._events.splice(this._events.indexOf(event), 1);
-
-        // render events
-        this.renderAllEvents();
-      }); */
+        // here should be a delete event's emition...
+        this._onDataChange(this._data, null);
+      });
 
     this._pointEdit.element.querySelectorAll(`input`).forEach((elem) => {
       elem.addEventListener(`focus`, () => {

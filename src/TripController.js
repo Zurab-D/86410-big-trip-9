@@ -1,5 +1,5 @@
 // utils
-import {render, unrender, Position, uniqueDays, SortTypes} from './utils';
+import {render, Position, uniqueDays, SortTypes} from './utils';
 
 // import components
 import {Trip} from './components/trip';
@@ -7,8 +7,6 @@ import {Menu} from './components/menu';
 import {Filter} from './components/filter';
 import {Sort} from './components/sort';
 import {TripDay} from './components/trip-day';
-import {EventEdit} from './components/event-edit';
-import {EventItem} from './components/event-item';
 import {NoPoints} from './components/no-points';
 
 import {PointController} from './PointController';
@@ -18,11 +16,23 @@ export class TripController {
     this._container = container;
     this._events = events;
 
-    this._subscriptions = [];
-		this._onChangeView = this._onChangeView.bind(this);
-		this._onDataChange = this._onDataChange.bind(this);
+    this._subscribtions = [];
+    this._onChangeView = this._onChangeView.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+  }
 
-    this.init();
+  _subscribe(event, func) {
+    this._subscribtions.push(
+        {event, func}
+    );
+  }
+
+  _emit(event) {
+    this._subscribtions
+      .filter((subscr) => subscr.event === event)
+      .forEach((subscr) => {
+        subscr.func();
+      });
   }
 
   // method: init
@@ -86,7 +96,7 @@ export class TripController {
       .filter((eventsItem) => eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
         const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
-        this._subscriptions.push(pointController.setDefaultView.bind(pointController));
+        this._subscribe(`view`, pointController.setDefaultView.bind(pointController));
       });
   }
 
@@ -99,19 +109,24 @@ export class TripController {
 
     // render all days
     if (arrTripDays.length) {
-      arrTripDays.forEach( this.renderTripDay.bind(this) );
+      arrTripDays.forEach(this.renderTripDay.bind(this));
     } else {
       // no event found
       render(this.elemTripEvents, (new NoPoints()).element);
     }
   }
 
-	_onChangeView() {
-		this._subscriptions.forEach((subscription) => subscription());
-	}
+  _onChangeView() {
+    this._emit(`view`);
+  }
 
   _onDataChange(newData, oldData) {
-		Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
+    if (newData && oldData) {
+      Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
+    } else if (newData && !oldData) {
+      // insteed of catching delete event...
+      this._events.splice(this._events.indexOf(newData), 1);
+    }
     this.renderAllEvents();
-	}
+  }
 }

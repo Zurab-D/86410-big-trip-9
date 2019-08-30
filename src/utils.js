@@ -112,10 +112,10 @@ export const strToDate = (str) => {
             dt.setMonth(it - 1);
             break;
           case 2:
-            dt.setFullYear(+(`20`+it));
+            dt.setFullYear(+(`20` + it));
             break;
         }
-      })
+      });
     } else {
       item.split(`:`).forEach((it, i) => {
         if (i === 0) {
@@ -123,7 +123,7 @@ export const strToDate = (str) => {
         } else {
           dt.setMinutes(+it);
         }
-      })
+      });
     }
   });
   return dt;

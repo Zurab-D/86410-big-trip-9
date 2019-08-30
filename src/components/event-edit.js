@@ -27,7 +27,7 @@ export class EventEdit extends AbstractComponent {
 
   _subscribe(event, func) {
     this._subscribtions.push(
-      {event, func}
+        {event, func}
     );
   }
 
@@ -51,15 +51,15 @@ export class EventEdit extends AbstractComponent {
     this.element.querySelector(`label.event__type`).addEventListener(`click`, (evt) => {
       this._typeSelected = document.querySelector(`form.event.event--edit`).elements[`event-type`].value;
       // if type modified
-      if (!evt.target.checked && this._type != this._typeSelected) {
+      if (!evt.target.checked && this._type !== this._typeSelected) {
         // fire event here
         this._emit(`typeModified`);
-      };
+      }
     });
 
-    this.element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+    this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
       this._emit(`placeModified`);
-    })
+    });
   }
 
   typeModified() {
@@ -70,7 +70,7 @@ export class EventEdit extends AbstractComponent {
       this._eventOffersEl.innerHTML = this.offersTemplate;
       this._eventFieldDestEl.innerHTML = this.destinationTmpl;
 
-      this.element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
         this._emit(`placeModified`);
       });
     }
@@ -98,7 +98,7 @@ export class EventEdit extends AbstractComponent {
           `).join(``)}
           </div>
         </div>` : ``
-      }`;
+}`;
   }
 
   get offersTemplate() {
@@ -150,7 +150,7 @@ export class EventEdit extends AbstractComponent {
             reduce((prev, type) => {
               if (!prev.includes(type.group)) {
                 prev.push(type.group);
-              };
+              }
               return prev;
             }, []).
             map((group) => {
@@ -170,7 +170,7 @@ export class EventEdit extends AbstractComponent {
                         <label class="event__type-label event__type-label--${eventType.name.toLowerCase()}" for="event-type-${eventType.name.toLowerCase()}-1">${eventType.name}</label>
                       </div>`
                     ).join(``)}
-              </fieldset>`
+              </fieldset>`;
             }).join(``)}
           </div>
         </div>

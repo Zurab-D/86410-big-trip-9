@@ -8,4 +8,5 @@ const EVENT_COUNT = 6;
 const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent)).
   sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
 
-new TripController(pageBody, arrTripEvents);
+const tripController = new TripController(pageBody, arrTripEvents);
+tripController.init();

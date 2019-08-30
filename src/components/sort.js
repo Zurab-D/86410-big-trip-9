@@ -18,8 +18,7 @@ export class Sort extends AbstractComponent {
               <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
             </svg>
           </label>
-        </div>`
-      ).join(``)}
+        </div>`).join(``)}
 
       <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
     </form>`;
