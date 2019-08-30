@@ -1,5 +1,5 @@
 // utils
-import {render, unrender, Position, uniqueDays} from './utils';
+import {render, Position, uniqueDays, SortTypes} from './utils';
 
 // import components
 import {Trip} from './components/trip';
@@ -7,14 +7,32 @@ import {Menu} from './components/menu';
 import {Filter} from './components/filter';
 import {Sort} from './components/sort';
 import {TripDay} from './components/trip-day';
-import {EventEdit} from './components/event-edit';
-import {EventItem} from './components/event-item';
 import {NoPoints} from './components/no-points';
+
+import {PointController} from './PointController';
 
 export class TripController {
   constructor(container, events) {
     this._container = container;
     this._events = events;
+
+    this._subscribtions = [];
+    this._onChangeView = this._onChangeView.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+  }
+
+  _subscribe(event, func) {
+    this._subscribtions.push(
+        {event, func}
+    );
+  }
+
+  _emit(event) {
+    this._subscribtions
+      .filter((subscr) => subscr.event === event)
+      .forEach((subscr) => {
+        subscr.func();
+      });
   }
 
   // method: init
@@ -28,7 +46,7 @@ export class TripController {
     this.tripDays = this.elemTripEvents.querySelector(`.trip-days`);
 
     // trip
-    render(this.elemTripInfo, (new Trip(this._events)).element);
+    render(this.elemTripMain, (new Trip(this._events)).element, Position.afterBegin);
 
     // menu
     render(this.elemTripControlsH, (new Menu()).element, Position.afterEnd);
@@ -43,13 +61,13 @@ export class TripController {
     this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
       itemSort.addEventListener(`click`, () => {
         switch (itemSort.dataset.sort) {
-          case `event`:
+          case SortTypes.event:
             this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
             break;
-          case `time`:
+          case SortTypes.time:
             this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
             break;
-          case `price`:
+          case SortTypes.price:
             this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
             break;
         }
@@ -62,7 +80,7 @@ export class TripController {
     this.renderAllEvents();
   }
 
-  // method: render eventA day with events
+  // method: render event day with events
   renderTripDay(day, dayIndex, days) {
     const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
     // day info
@@ -77,60 +95,8 @@ export class TripController {
       // get events for current day
       .filter((eventsItem) => eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
-        const eventEdit = new EventEdit(event);
-        const eventItem = new EventItem(event);
-
-        render(eventList, eventItem.element);
-
-        const onEscKeyDown = (evt) => {
-          if (evt.key === `Escape` || evt.key === `Esc`) {
-            document.removeEventListener(`keydown`, onEscKeyDown);
-            eventList.replaceChild(eventItem.element, eventEdit.element);
-          }
-        };
-
-        eventItem.element.querySelector(`.event__rollup-btn`).
-          addEventListener(`click`, () => {
-            eventList.replaceChild(eventEdit.element, eventItem.element);
-            document.addEventListener(`keydown`, onEscKeyDown);
-          });
-
-        eventEdit.element.
-          addEventListener(`submit`, () => {
-            eventList.replaceChild(eventItem.element, eventEdit.element);
-          });
-
-        eventEdit.element.querySelector(`.event__rollup-btn`).
-          addEventListener(`click`, () => {
-            eventList.replaceChild(eventItem.element, eventEdit.element);
-          });
-
-        eventEdit.element.
-          addEventListener(`reset`, () => {
-            document.removeEventListener(`keydown`, onEscKeyDown);
-            unrender(eventItem.element);
-            eventItem.removeElement();
-
-            unrender(eventEdit.element);
-            eventEdit.removeElement();
-
-            // remove event from events array
-            this._events.splice(this._events.indexOf(event), 1);
-
-            // render events
-            this.renderAllEvents();
-          });
-
-        Array.from(eventEdit.element.querySelectorAll(`input`)).forEach((elem) => {
-          elem.addEventListener(`focus`, () => {
-            document.removeEventListener(`keydown`, onEscKeyDown);
-          });
-
-          elem.addEventListener(`blur`, () => {
-            document.addEventListener(`keydown`, onEscKeyDown);
-
-          });
-        });
+        const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
+        this._subscribe(`view`, pointController.setDefaultView.bind(pointController));
       });
   }
 
@@ -148,5 +114,19 @@ export class TripController {
       // no event found
       render(this.elemTripEvents, (new NoPoints()).element);
     }
+  }
+
+  _onChangeView() {
+    this._emit(`view`);
+  }
+
+  _onDataChange(newData, oldData) {
+    if (newData && oldData) {
+      Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
+    } else if (newData && !oldData) {
+      // insteed of catching delete event...
+      this._events.splice(this._events.indexOf(newData), 1);
+    }
+    this.renderAllEvents();
   }
 }
