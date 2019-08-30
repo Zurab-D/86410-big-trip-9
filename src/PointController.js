@@ -108,7 +108,7 @@ export class PointController {
 
   setDefaultView() {
     if (this._container.contains(this._pointEdit.element)) {
-      this._container.replaceChild(this._taskView.element, this._taskEdit.element);
+      this._container.replaceChild(this._pointView.element, this._pointEdit.element);
     }
   }
 }

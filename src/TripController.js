@@ -107,11 +107,11 @@ export class TripController {
   }
 
 	_onChangeView() {
-		this._subscriptions.forEach((item) => item());
+		this._subscriptions.forEach((subscription) => subscription());
 	}
 
   _onDataChange(newData, oldData) {
-		Object.assign(this._events[this._events.findIndex((item) => item === oldData)], newData);
+		Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
     this.renderAllEvents();
 	}
 }
