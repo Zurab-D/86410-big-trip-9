@@ -132,7 +132,7 @@ export class TripController {
 
     // re-render header
     unrender(this._trip.element);
-    this._trip.removeElement()
+    this._trip.removeElement();
     render(this.elemTripMain, this._trip.element, Position.afterBegin);
   }
 }
