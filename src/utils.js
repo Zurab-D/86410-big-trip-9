@@ -1,3 +1,8 @@
+import moment from 'moment';
+
+export const MOMENT_DATE_FORMAT = `DD.MM.YY hh:mm`;
+export const FLATPICKR_DATE_FORMAT = `d.m.y H:i`;
+
 export const SortTypes = {
   event: `event`,
   time: `time`,
@@ -41,23 +46,8 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const arrMonthNames = [
-  `Jan`,
-  `Feb`,
-  `Mar`,
-  `Apr`,
-  `May`,
-  `Jun`,
-  `Jul`,
-  `Aug`,
-  `Sep`,
-  `Oct`,
-  `Nov`,
-  `Dec`,
-];
-
 // date to string short format
-export const getDateStrShort = (date) => arrMonthNames[(new Date(date)).getMonth()] + ` ` + (new Date(date)).getDate();
+export const getDateStrShort = (date) => moment(date).format(`MMM DD`);
 
 export const uniqueDays = (events) => {
   return events.reduce((prevValue, event) => {
@@ -70,34 +60,7 @@ export const uniqueDays = (events) => {
 };
 
 // formate date to "dd.mm.yy hh:mi"
-export const formatDate = (date) => {
-  let dd = date.getDate();
-  if (dd < 10) {
-    dd = `0` + dd;
-  }
-
-  let mm = date.getMonth() + 1;
-  if (mm < 10) {
-    mm = `0` + mm;
-  }
-
-  let yy = date.getFullYear() % 100;
-  if (yy < 10) {
-    yy = `0` + yy;
-  }
-
-  let hh = date.getHours();
-  if (hh < 10) {
-    hh = `0` + hh;
-  }
-
-  let mi = date.getMinutes();
-  if (mi < 10) {
-    mi = `0` + mi;
-  }
-
-  return dd + `.` + mm + `.` + yy + ` ` + hh + `:` + mi;
-};
+export const formatDate = (date) => moment(date).format(MOMENT_DATE_FORMAT);
 
 export const strToDate = (str) => {
   let dt = new Date();
@@ -137,8 +100,12 @@ export const randomDate = function (startDate, endDate, startHour, endHour) {
   return date;
 };
 
-export const getDurationHours = (durationMiliseconds) => Math.floor(durationMiliseconds / 1000 / 60 / 60);
-
-export const getDurationMinutes = (durationMiliseconds) => durationMiliseconds / 1000 / 60 % 60;
-
 export const truncDT = (ms) => new Date(ms).setHours(0, 0, 0, 0);
+
+export const getDuration = (durationMiliseconds) => {
+  const diffDuration = moment.duration(durationMiliseconds);
+
+  return (diffDuration.days() > 0 ? diffDuration.days() + `d ` : ``) +
+    diffDuration.hours() + `h ` +
+    diffDuration.minutes() + `m`;
+};

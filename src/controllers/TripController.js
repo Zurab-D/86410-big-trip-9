@@ -1,13 +1,13 @@
 // utils
-import {render, Position, uniqueDays, SortTypes} from './utils';
+import {render, unrender, Position, uniqueDays, SortTypes} from '../utils';
 
 // import components
-import {Trip} from './components/trip';
-import {Menu} from './components/menu';
-import {Filter} from './components/filter';
-import {Sort} from './components/sort';
-import {TripDay} from './components/trip-day';
-import {NoPoints} from './components/no-points';
+import {Trip} from '../components/trip';
+import {Menu} from '../components/menu';
+import {Filter} from '../components/filter';
+import {Sort} from '../components/sort';
+import {TripDay} from '../components/trip-day';
+import {NoPoints} from '../components/no-points';
 
 import {PointController} from './PointController';
 
@@ -21,13 +21,13 @@ export class TripController {
     this._onDataChange = this._onDataChange.bind(this);
   }
 
-  _subscribe(event, func) {
+  subscribe(event, func) {
     this._subscribtions.push(
         {event, func}
     );
   }
 
-  _emit(event) {
+  emit(event) {
     this._subscribtions
       .filter((subscr) => subscr.event === event)
       .forEach((subscr) => {
@@ -45,8 +45,9 @@ export class TripController {
     this.elemTripEvents = this.elemPageMain.querySelector(`.trip-events`);
     this.tripDays = this.elemTripEvents.querySelector(`.trip-days`);
 
+    this._trip = new Trip(this._events);
     // trip
-    render(this.elemTripMain, (new Trip(this._events)).element, Position.afterBegin);
+    render(this.elemTripMain, this._trip.element, Position.afterBegin);
 
     // menu
     render(this.elemTripControlsH, (new Menu()).element, Position.afterEnd);
@@ -96,7 +97,7 @@ export class TripController {
       .filter((eventsItem) => eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
         const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
-        this._subscribe(`view`, pointController.setDefaultView.bind(pointController));
+        this.subscribe(`view`, pointController.setDefaultView.bind(pointController));
       });
   }
 
@@ -117,7 +118,7 @@ export class TripController {
   }
 
   _onChangeView() {
-    this._emit(`view`);
+    this.emit(`view`);
   }
 
   _onDataChange(newData, oldData) {
@@ -128,5 +129,10 @@ export class TripController {
       this._events.splice(this._events.indexOf(newData), 1);
     }
     this.renderAllEvents();
+
+    // re-render header
+    unrender(this._trip.element);
+    this._trip.removeElement();
+    render(this.elemTripMain, this._trip.element, Position.afterBegin);
   }
 }

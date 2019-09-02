@@ -1,6 +1,6 @@
 import {AbstractComponent} from './AbstractComponent';
 
-import {formatDate, getDurationHours, getDurationMinutes} from '../utils';
+import {formatDate, getDuration} from '../utils';
 
 export class EventItem extends AbstractComponent {
   constructor({type, place, dateBegin, duration, price, offers}) {
@@ -23,11 +23,11 @@ export class EventItem extends AbstractComponent {
 
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(new Date(this._dateBegin))}</time>
+          <time class="event__start-time" datetime="2019-03-18T10:30">${formatDate(this._dateBegin)}</time>
           &mdash;
-          <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(new Date(this._dateBegin + this._duration))}</time>
+          <time class="event__end-time" datetime="2019-03-18T11:00">${formatDate(this._dateBegin + this._duration)}</time>
         </p>
-        <p class="event__duration">${getDurationHours(this._duration)}h ${getDurationMinutes(this._duration)}m</p>
+        <p class="event__duration">${getDuration(this._duration)}</p>
       </div>
 
       <p class="event__price">
