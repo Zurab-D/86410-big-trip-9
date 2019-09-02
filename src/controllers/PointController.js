@@ -1,10 +1,10 @@
-import {strToDate, render, unrender} from './utils';
+import {strToDate, render, unrender} from '../utils';
 
-import {EventEdit} from './components/event-edit';
-import {EventItem} from './components/event-item';
+import {EventEdit} from '../components/event-edit';
+import {EventItem} from '../components/event-item';
 
-import {arrEventTypes} from './data/event-types';
-import {arrPlaces} from './data/places';
+import {arrEventTypes} from '../data/event-types';
+import {arrPlaces} from '../data/places';
 
 export class PointController {
   constructor(container, data, onDataChange, onChangeView) {

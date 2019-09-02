@@ -12,7 +12,7 @@ export const getEvent = () => ({
   dateBegin: randomDate(new Date(`01.01.2019`), new Date(`01.10.2019`), 12, 12).getTime(),
   duration: ((Math.floor(Math.random() * (120 - 30 + 1)) + 30) * 60 * 1000), // miliseconds
   price: Math.floor(Math.random() * (200 - 20) + 20),
-  offers: arrOffers.slice(0, Math.floor(Math.random() * 3)),
+  offers: arrOffers.slice(0).sort(() => Math.random() - 0.5).slice(0, Math.floor(Math.random() * 4)),
   photos: new Array(22).
       fill().
       map(() => `http://picsum.photos/300/150?r=${Math.random()}`).

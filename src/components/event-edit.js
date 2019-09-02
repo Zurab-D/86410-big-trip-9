@@ -1,9 +1,13 @@
 import {AbstractComponent} from './AbstractComponent';
-import {formatDate} from '../utils';
+import {formatDate, FLATPICKR_DATE_FORMAT} from '../utils';
 import {arrPlaces} from '../data/places';
 import {arrEventTypes} from '../data/event-types';
 import {arrOffers} from '../data/offers';
 import {loremIpsum} from '../data/event';
+
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/light.css';
 
 export class EventEdit extends AbstractComponent {
   constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}) {
@@ -59,6 +63,11 @@ export class EventEdit extends AbstractComponent {
 
     this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
       this._emit(`placeModified`);
+    });
+
+    flatpickr(this.element.querySelectorAll(`.event__input--time`), {
+      enableTime: true,
+      dateFormat: FLATPICKR_DATE_FORMAT
     });
   }
 
@@ -188,7 +197,7 @@ export class EventEdit extends AbstractComponent {
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(new Date(this._dateBegin + this._duration))}">
+          <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(this._dateBegin + this._duration)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">

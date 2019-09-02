@@ -45,21 +45,21 @@ export class Trip extends AbstractComponent {
   }
 
   get totalCost() {
-    return this._arrTripEvents.reduce((previousValue, event) =>
-      previousValue + event.price + event.offers.reduce((prevOffersSum, offer) =>
-        prevOffersSum + offer.price, 0),
-    0);
+    return this._arrTripEvents.reduce((previousValue, event) => {
+      return +(previousValue) + +(event.price) + event.offers.reduce((prevOffersSum, offer) =>
+        offer.selected ? prevOffersSum + offer.price : prevOffersSum, 0);
+    }, 0);
   }
 
   get template() {
     return `<section class="trip-main__trip-info  trip-info">
-        <div class="trip-info__main">
-          <h1 class="trip-info__title">${this.tripTitle}</h1>
-          <p class="trip-info__dates">${this.tripDates}</p>
-        </div>
-        <p class="trip-info__cost">
-          Total: &euro;&nbsp;<span class="trip-info__cost-value">${this.totalCost}</span>
-        </p>
-      </section>`;
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">${this.tripTitle}</h1>
+        <p class="trip-info__dates">${this.tripDates}</p>
+      </div>
+      <p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${this.totalCost}</span>
+      </p>
+    </section>`;
   }
 }

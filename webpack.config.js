@@ -1,5 +1,6 @@
 const path = require('path');
 const distPath = path.join(__dirname, '/public');
+const MomentLocalesPlugin = require(`moment-locales-webpack-plugin`);
 
 const config = {
   mode: `development`,
@@ -12,7 +13,21 @@ const config = {
   devServer: {
     contentBase: path.join(__dirname, `public`),
     port: 3000
-  }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [`style-loader`, `css-loader`],
+      }
+    ]
+  },
+  plugins: [
+    // Оставляем только одну локаль.
+    new MomentLocalesPlugin({
+      localesToKeep: [`es-us`],
+    }),
+  ],
 };
 
 module.exports = config;
