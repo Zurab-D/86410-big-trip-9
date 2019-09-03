@@ -62,7 +62,7 @@ export class PointController {
             })),
         };
 
-        this._onDataChange(entry, this._data);
+        this._onDataChange(this._data, entry);
 
         document.removeEventListener(`keydown`, onEscKeyDown);
         this._container.replaceChild(this._pointView.element, this._pointEdit.element);
@@ -74,6 +74,7 @@ export class PointController {
         this._container.replaceChild(this._pointView.element, this._pointEdit.element);
       });
 
+    // delete event
     this._pointEdit.element.
       addEventListener(`reset`, () => {
         document.removeEventListener(`keydown`, onEscKeyDown);
@@ -84,7 +85,6 @@ export class PointController {
         unrender(this._pointEdit.element);
         this._pointEdit.removeElement();
 
-        // here should be a delete event's emition...
         this._onDataChange(this._data, null);
       });
 

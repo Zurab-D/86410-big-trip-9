@@ -1,15 +1,12 @@
-// utils
 import {render, unrender, Position, uniqueDays, SortTypes} from '../utils';
 
-// import components
 import {Trip} from '../components/trip';
-import {Menu} from '../components/menu';
-import {Filter} from '../components/filter';
-import {Sort} from '../components/sort';
 import {TripDay} from '../components/trip-day';
 import {NoPoints} from '../components/no-points';
 
 import {PointController} from './PointController';
+
+import {getEventEmpty} from '../data/event';
 
 export class TripController {
   constructor(container, events) {
@@ -38,25 +35,14 @@ export class TripController {
   // method: init
   init() {
     this.elemTripMain = this._container.querySelector(`.trip-main`);
-    this.elemTripInfo = this.elemTripMain.querySelector(`.trip-info`);
     this.elemTripControls = this.elemTripMain.querySelector(`.trip-controls`);
-    this.elemTripControlsH = this.elemTripControls.querySelector(`h2.visually-hidden`);
     this.elemPageMain = this._container.querySelector(`.page-main`);
     this.elemTripEvents = this.elemPageMain.querySelector(`.trip-events`);
-    this.tripDays = this.elemTripEvents.querySelector(`.trip-days`);
+    this.elemTripDays = this.elemTripEvents.querySelector(`.trip-days`);
 
-    this._trip = new Trip(this._events);
     // trip
+    this._trip = new Trip(this._events);
     render(this.elemTripMain, this._trip.element, Position.afterBegin);
-
-    // menu
-    render(this.elemTripControlsH, (new Menu()).element, Position.afterEnd);
-
-    // filters
-    render(this.elemTripControls, (new Filter()).element);
-
-    // sort
-    render(this.tripDays, (new Sort()).element, Position.beforeBegin);
 
     // events for sort elements
     this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
@@ -85,9 +71,9 @@ export class TripController {
   renderTripDay(day, dayIndex, days) {
     const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
     // day info
-    render(this.tripDays, (new TripDay(day, i + 1)).element);
+    render(this.elemTripDays, (new TripDay(day, i + 1)).element);
 
-    const daysEl = this.tripDays.querySelectorAll(`.day`);
+    const daysEl = this.elemTripDays.querySelectorAll(`.day`);
     const dayElem = daysEl[daysEl.length - 1];
     const eventList = dayElem.querySelector(`.trip-events__list`);
 
@@ -102,8 +88,15 @@ export class TripController {
   }
 
   // method: rendfer all events
+  createTripEvent() {
+    const newEventData = getEventEmpty();
+    const pointController = new PointController(this.elemTripDays, newEventData, this._onDataChange, this._onChangeView);
+    pointController._pointEdit.element.querySelector(`.event__rollup-btn`).click();
+  }
+
+  // method: rendfer all events
   renderAllEvents() {
-    this.tripDays.innerHTML = ``;
+    this.elemTripDays.innerHTML = ``;
 
     // array of trip days
     const arrTripDays = uniqueDays(this._events);
@@ -117,16 +110,31 @@ export class TripController {
     }
   }
 
+  // method: hide
+  hide() {
+    this.elemTripEvents.classList.add(`visually-hidden`);
+  }
+
+  // method: show
+  show() {
+    this.elemTripEvents.classList.remove(`visually-hidden`);
+  }
+
+  // method: emit event "view"
   _onChangeView() {
     this.emit(`view`);
   }
 
-  _onDataChange(newData, oldData) {
+  // method:
+  _onDataChange(oldData, newData) {
     if (newData && oldData) {
       Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
-    } else if (newData && !oldData) {
-      // insteed of catching delete event...
-      this._events.splice(this._events.indexOf(newData), 1);
+    } else if (!newData && oldData) {
+      // delete event item
+      this._events.splice(this._events.indexOf(oldData), 1);
+    } else {
+      // add event item
+      this._events.push(newData);
     }
     this.renderAllEvents();
 

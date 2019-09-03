@@ -20,3 +20,15 @@ export const getEvent = () => ({
       slice(0, Math.random() * (7 - 2) + 2),
   favorite: Boolean(Math.round(Math.random()) * 0.5)
 });
+
+export const getEventEmpty = () => ({
+  type: {},
+  place: {},
+  description: ``,
+  dateBegin: null,
+  duration: null, // miliseconds
+  price: null,
+  offers: [],
+  photos: [],
+  favorite: false
+});
