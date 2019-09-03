@@ -49,7 +49,7 @@ export class PointController {
           dateBegin: strToDate(formData.get(`event-start-time`)).getTime(),
           duration: strToDate(formData.get(`event-end-time`)).getTime() - strToDate(formData.get(`event-start-time`)).getTime(),
           price: formData.get(`event-price`),
-          favorite: formData.get(`event-favorite`) === `checked` ? true : false,
+          favorite: formData.get(`event-favorite`) === `on` ? true : false,
           offers: formData.getAll(`event-offer`)
             .reduce((prev, dataItem) => {
               const offerItem = prev.find((item) => item.id === dataItem);

@@ -52,10 +52,10 @@ export class EventEdit extends AbstractComponent {
     this._eventDestinationEl = this.element.querySelector(`.event__section--destination`);
 
     // click event type input
-    this.element.querySelector(`label.event__type`).addEventListener(`click`, (evt) => {
+    this.element.querySelector(`.event__type-toggle`).addEventListener(`click`, (evt) => {
       this._typeSelected = document.querySelector(`form.event.event--edit`).elements[`event-type`].value;
       // if type modified
-      if (!evt.target.checked && this._type !== this._typeSelected) {
+      if (!evt.target.checked && this._type.name !== this._typeSelected) {
         // fire event here
         this._emit(`typeModified`);
       }
