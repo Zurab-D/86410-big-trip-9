@@ -22,12 +22,17 @@ export const getEvent = () => ({
 });
 
 export const getEventEmpty = () => ({
-  type: {},
-  place: {},
+  type: {
+    name: `Select type`,
+    group: ``,
+    actionName: `Select the event type`,
+    icon: `trip.png`
+  },
+  place: {name: ``, type: ``},
   description: ``,
-  dateBegin: null,
-  duration: null, // miliseconds
-  price: null,
+  dateBegin: (new Date()).getTime(),
+  duration: 0, // miliseconds
+  price: 0,
   offers: [],
   photos: [],
   favorite: false

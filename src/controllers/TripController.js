@@ -6,8 +6,6 @@ import {NoPoints} from '../components/no-points';
 
 import {PointController} from './PointController';
 
-import {getEventEmpty} from '../data/event';
-
 export class TripController {
   constructor(container, events) {
     this._container = container;
@@ -34,6 +32,7 @@ export class TripController {
 
   // method: init
   init() {
+    this._sortBy = SortTypes.time;
     this.elemTripMain = this._container.querySelector(`.trip-main`);
     this.elemTripControls = this.elemTripMain.querySelector(`.trip-controls`);
     this.elemPageMain = this._container.querySelector(`.page-main`);
@@ -47,17 +46,7 @@ export class TripController {
     // events for sort elements
     this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
       itemSort.addEventListener(`click`, () => {
-        switch (itemSort.dataset.sort) {
-          case SortTypes.event:
-            this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
-            break;
-          case SortTypes.time:
-            this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
-            break;
-          case SortTypes.price:
-            this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
-            break;
-        }
+        this._sortBy = itemSort.dataset.sort;
 
         this.renderAllEvents();
       });
@@ -67,15 +56,25 @@ export class TripController {
     this.renderAllEvents();
   }
 
+  // get first day's event list element
+  get firstDayEventListElem() {
+    const daysEl = this.elemTripDays.querySelectorAll(`.day`);
+    return daysEl[0].querySelector(`.trip-events__list`);
+  }
+
+  // get last day's event list element
+  get lastDayEventListElem() {
+    const daysEl = this.elemTripDays.querySelectorAll(`.day`);
+    return daysEl[daysEl.length - 1].querySelector(`.trip-events__list`);
+  }
+
   // method: render event day with events
   renderTripDay(day, dayIndex, days) {
     const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
     // day info
     render(this.elemTripDays, (new TripDay(day, i + 1)).element);
 
-    const daysEl = this.elemTripDays.querySelectorAll(`.day`);
-    const dayElem = daysEl[daysEl.length - 1];
-    const eventList = dayElem.querySelector(`.trip-events__list`);
+    const eventList = this.lastDayEventListElem;
 
     // events
     this._events
@@ -89,13 +88,25 @@ export class TripController {
 
   // method: rendfer all events
   createTripEvent() {
-    const newEventData = getEventEmpty();
-    const pointController = new PointController(this.elemTripDays, newEventData, this._onDataChange, this._onChangeView);
-    pointController._pointEdit.element.querySelector(`.event__rollup-btn`).click();
+    const pointController = new PointController(this.firstDayEventListElem, null, this._onDataChange, this._onChangeView);
+    pointController._pointView.element.querySelector(`.event__rollup-btn`).click();
   }
 
   // method: rendfer all events
   renderAllEvents() {
+    // sort items
+    switch (this._sortBy) {
+      case SortTypes.event:
+        this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
+        break;
+      case SortTypes.price:
+        this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
+        break;
+      default:
+        this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+        break;
+    }
+
     this.elemTripDays.innerHTML = ``;
 
     // array of trip days

@@ -1,6 +1,6 @@
 import {render, Position} from './utils';
 
-import {getEvent, getEventEmpty} from './data/event';
+import {getEvent} from './data/event';
 
 import {Menu} from './components/menu';
 import {Filter} from './components/filter';
@@ -19,8 +19,7 @@ const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
 const elemTripDays = elemTripEvents.querySelector(`.trip-days`);
 
 const EVENT_COUNT = 6;
-const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent))
-  .sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent));
 
 // menu
 const menu = new Menu();
@@ -41,11 +40,11 @@ export const tripController = new TripController(pageBody, arrTripEvents);
 tripController.init();
 
 // toggle events/stats
-const menuItems = menu.element.querySelectorAll(`.trip-tabs__btn`)
+const menuItems = menu.element.querySelectorAll(`.trip-tabs__btn`);
 menu.element.addEventListener(`click`, (evt) => {
   evt.preventDefault();
 
-  if (evt.target.tagName != `A`) {
+  if (evt.target.tagName !== `A`) {
     return;
   }
 
@@ -69,9 +68,8 @@ menu.element.addEventListener(`click`, (evt) => {
 });
 
 // New event
-const newEventBtn = elemTripMain.querySelector(`.trip-main__event-add-btn`);
-newEventBtn.addEventListener(`click`, () => {
-  // const newEvent = getEventEmpty();
-  // tripController._onDataChange(null, newEvent);
-  tripController.createTripEvent();
-});
+elemTripMain
+  .querySelector(`.trip-main__event-add-btn`)
+  .addEventListener(`click`, () => {
+    tripController.createTripEvent();
+  });
