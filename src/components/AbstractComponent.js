@@ -21,6 +21,14 @@ export class AbstractComponent {
     return this._element;
   }
 
+  hide() {
+    this._element.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._element.classList.remove(`visually-hidden`);
+  }
+
   removeElement() {
     this._element = null;
   }

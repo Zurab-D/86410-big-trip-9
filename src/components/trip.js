@@ -9,10 +9,10 @@ export class Trip extends AbstractComponent {
   }
 
   get tripTitle() {
-    return this._arrTripEvents.
-      filter((event) => event.place.type === `sity`).
-      map((event) => event.place.name).
-      reduce((previousValue, sity, idx, arr) => {
+    return this._arrTripEvents
+      .filter((event) => event.place.type === `sity`)
+      .map((event) => event.place.name)
+      .reduce((previousValue, sity, idx, arr) => {
         if (idx === 0) {
           if (arr.length === 1) {
             return sity + ` &mdash; ` + sity;

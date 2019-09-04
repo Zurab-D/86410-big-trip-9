@@ -13,7 +13,6 @@ export class EventEdit extends AbstractComponent {
   constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}) {
     super();
     this._type = type;
-    // this._lastType = type.name;
     this._typeSelected = undefined;
     this._place = place;
     this._description = description;
@@ -22,6 +21,7 @@ export class EventEdit extends AbstractComponent {
     this._price = price;
     this._offers = offers;
     this._photos = photos;
+
     this._favorite = favorite;
 
     this._subscribtions = [];
@@ -35,7 +35,7 @@ export class EventEdit extends AbstractComponent {
     );
   }
 
-  _emit(event) {
+  emit(event) {
     this._subscribtions
       .filter((subscr) => subscr.event === event)
       .forEach((subscr) => {
@@ -44,6 +44,7 @@ export class EventEdit extends AbstractComponent {
   }
 
   init() {
+    this._typeElem = this.element.querySelector(`.event__type-toggle`);
     this._eventOffersEl = this.element.querySelector(`.event__section--offers`);
     this._subscribe(`typeModified`, this.typeModified.bind(this));
     this._subscribe(`placeModified`, this.placeModified.bind(this));
@@ -52,17 +53,26 @@ export class EventEdit extends AbstractComponent {
     this._eventDestinationEl = this.element.querySelector(`.event__section--destination`);
 
     // click event type input
-    this.element.querySelector(`label.event__type`).addEventListener(`click`, (evt) => {
+    this._typeElem.addEventListener(`click`, (evt) => {
       this._typeSelected = document.querySelector(`form.event.event--edit`).elements[`event-type`].value;
+
       // if type modified
-      if (!evt.target.checked && this._type !== this._typeSelected) {
-        // fire event here
-        this._emit(`typeModified`);
+      if (!evt.target.checked && this._type.name !== this._typeSelected) {
+        this.emit(`typeModified`);
       }
     });
 
+    // if destination changed
     this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
-      this._emit(`placeModified`);
+      this.emit(`placeModified`);
+    });
+
+    // hide type list when item clicked
+    this.element.querySelector(`.event__type-list`).addEventListener(`click`, (evt) => {
+      if (evt.target.tagName === `INPUT`) {
+        // evt.preventDefault();
+        this._typeElem.click();
+      }
     });
 
     flatpickr(this.element.querySelectorAll(`.event__input--time`), {
@@ -74,13 +84,15 @@ export class EventEdit extends AbstractComponent {
   typeModified() {
     if (this._typeSelected) {
       this._type = arrEventTypes.find((type) => type.name === this._typeSelected);
+
       this._offers = arrOffers.slice(0, Math.floor(Math.random() * 3));
-      this._place = arrPlaces[Math.floor(Math.random() * arrPlaces.length)];
+      this._place = this._place.name ? arrPlaces[Math.floor(Math.random() * arrPlaces.length)] : {name: ``, type: ``};
+
       this._eventOffersEl.innerHTML = this.offersTemplate;
       this._eventFieldDestEl.innerHTML = this.destinationTmpl;
 
       this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
-        this._emit(`placeModified`);
+        this.emit(`placeModified`);
       });
     }
   }
@@ -140,7 +152,7 @@ export class EventEdit extends AbstractComponent {
   }
 
   _onTypeModified() {
-    this._subscribtions.forEach((subscribe) => subscribe());
+    this.emit(`typeModified`);
   }
 
   get template() {
