@@ -6,6 +6,8 @@ import {NoPoints} from '../components/no-points';
 
 import {PointController} from './PointController';
 
+const SHOW_NO_DAY = -1;
+
 export class TripController {
   constructor(container, events) {
     this._container = container;
@@ -32,7 +34,7 @@ export class TripController {
 
   // method: init
   init() {
-    this._sortBy = SortTypes.time;
+    this._sortBy = SortTypes.event;
     this.elemTripMain = this._container.querySelector(`.trip-main`);
     this.elemTripControls = this.elemTripMain.querySelector(`.trip-controls`);
     this.elemPageMain = this._container.querySelector(`.page-main`);
@@ -70,16 +72,23 @@ export class TripController {
 
   // method: render event day with events
   renderTripDay(day, dayIndex, days) {
-    const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
-    // day info
-    render(this.elemTripDays, (new TripDay(day, i + 1)).element);
+    let showNoDay = 0;
+    if (days.length === 1 && days[0] === SHOW_NO_DAY) {
+      showNoDay = SHOW_NO_DAY;
+      render(this.elemTripDays, (new TripDay()).element);
+    } else {
+      // day info
+      const i = days.slice(0).sort((dayA, dayB) => dayA > dayB ? 1 : -1).indexOf(day);
+      render(this.elemTripDays, (new TripDay(day, i + 1)).element);
+    }
 
     const eventList = this.lastDayEventListElem;
+
 
     // events
     this._events
       // get events for current day
-      .filter((eventsItem) => eventsItem.dayIndex === dayIndex)
+      .filter((eventsItem) => showNoDay === SHOW_NO_DAY || eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
         const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
         this.subscribe(`view`, pointController.setDefaultView.bind(pointController));
@@ -96,11 +105,11 @@ export class TripController {
   renderAllEvents() {
     // sort items
     switch (this._sortBy) {
-      case SortTypes.event:
-        this._events.sort((eventA, eventB) => eventA.type.name > eventB.type.name ? 1 : -1);
+      case SortTypes.time:
+        this._events.sort((eventA, eventB) => eventA.duration < eventB.duration ? 1 : -1);
         break;
       case SortTypes.price:
-        this._events.sort((eventA, eventB) => eventA.price > eventB.price ? 1 : -1);
+        this._events.sort((eventA, eventB) => eventA.price < eventB.price ? 1 : -1);
         break;
       default:
         this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
@@ -110,7 +119,12 @@ export class TripController {
     this.elemTripDays.innerHTML = ``;
 
     // array of trip days
-    const arrTripDays = uniqueDays(this._events);
+    let arrTripDays = [];
+    if (this._sortBy !== SortTypes.event) {
+      arrTripDays.push(SHOW_NO_DAY);
+    } else {
+      arrTripDays = uniqueDays(this._events);
+    }
 
     // render all days
     if (arrTripDays.length) {

@@ -49,6 +49,10 @@ export const createElement = (template) => {
 // date to string short format
 export const getDateStrShort = (date) => moment(date).format(`MMM DD`);
 
+export const getDateStrShortD = (date) => moment(date).format(`DD`);
+
+export const getDateStrMonth = (date) => moment(date).format(`MMM`);
+
 export const uniqueDays = (events) => {
   return events.reduce((prevValue, event) => {
     if (!prevValue[prevValue.length - 1] || prevValue[prevValue.length - 1] !== truncDT(event.dateBegin)) {

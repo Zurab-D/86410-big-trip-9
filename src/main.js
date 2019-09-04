@@ -26,7 +26,8 @@ const menu = new Menu();
 render(elemTripControlsH, menu.element, Position.afterEnd);
 
 // filters
-render(elemTripControls, (new Filter()).element);
+const filters = new Filter();
+render(elemTripControls, filters.element);
 
 // sort
 render(elemTripDays, (new Sort()).element, Position.beforeBegin);
@@ -55,12 +56,14 @@ menu.element.addEventListener(`click`, (evt) => {
   switch (evt.target === menuItems[0]) {
     case true:
       stats.hide();
+      filters.show();
       tripController.show();
       menuItems[0].classList.add(`trip-tabs__btn--active`);
       break;
 
     default:
       stats.show();
+      filters.hide();
       tripController.hide();
       menuItems[1].classList.add(`trip-tabs__btn--active`);
       break;
