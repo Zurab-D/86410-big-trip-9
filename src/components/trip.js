@@ -1,11 +1,11 @@
 import {AbstractComponent} from './AbstractComponent';
 
-import {getDateStrShort} from '../utils';
+import {getDateStrShort, getDateStrShortD, getDateStrMonth} from '../utils';
 
 export class Trip extends AbstractComponent {
   constructor(arrTripEvents) {
     super();
-    this._arrTripEvents = arrTripEvents;
+    this._arrTripEvents = arrTripEvents.slice(0).sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
   }
 
   get tripTitle() {
@@ -33,15 +33,13 @@ export class Trip extends AbstractComponent {
   }
 
   get tripDates() {
-    return this._arrTripEvents.reduce((previousValue, event, idx, arr) => {
-      if (idx === 0) {
-        return getDateStrShort(event.dateBegin);
-      }
-      if (idx === arr.length - 1) {
-        return previousValue + ` &mdash; ` + getDateStrShort(event.dateBegin);
-      }
-      return previousValue;
-    }, ``);
+    const arrLen = this._arrTripEvents.length;
+
+    return getDateStrShort(this._arrTripEvents[0].dateBegin)
+      + ` &mdash; `
+      + (getDateStrMonth(this._arrTripEvents[0].dateBegin) === getDateStrMonth(this._arrTripEvents[arrLen - 1].dateBegin)
+        ? getDateStrShortD(this._arrTripEvents[arrLen - 1].dateBegin)
+        : getDateStrShort(this._arrTripEvents[arrLen - 1].dateBegin));
   }
 
   get totalCost() {
