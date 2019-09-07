@@ -25,10 +25,10 @@ const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent));
 const menu = new Menu();
 render(elemTripControlsH, menu.element, Position.afterEnd);
 
-// filters
-const filters = new Filter();
+/* // filters
+const filters = new Filter(tripController);
 render(elemTripControls, filters.element);
-
+ */
 // sort
 render(elemTripDays, (new Sort()).element, Position.beforeBegin);
 
@@ -38,6 +38,10 @@ const statController = new StatController(elemTripEvents, arrTripEvents);
 // whole trip
 const tripController = new TripController(pageBody, arrTripEvents);
 tripController.init();
+
+// filters
+const filters = new Filter(tripController);
+render(elemTripControls, filters.element);
 
 // toggle events/stats
 const menuItems = menu.element.querySelectorAll(`.trip-tabs__btn`);
@@ -70,7 +74,7 @@ menu.element.addEventListener(`click`, (evt) => {
 });
 
 // uncomment this to go to the stats directly
-menu.element.querySelectorAll(`.trip-tabs__btn`)[1].click();
+// menu.element.querySelectorAll(`.trip-tabs__btn`)[1].click();
 
 // New event
 elemTripMain

@@ -1,4 +1,4 @@
-import {strToDate, render, unrender, Position} from '../utils';
+import {strToDate, render, Position} from '../utils';
 
 import {EventEdit} from '../components/event-edit';
 import {EventItem} from '../components/event-item';
@@ -90,13 +90,8 @@ export class PointController {
     this._pointEdit.element
       .addEventListener(`reset`, () => {
         document.removeEventListener(`keydown`, onEscKeyDown);
-
-        unrender(this._pointView.element);
         this._pointView.removeElement();
-
-        unrender(this._pointEdit.element);
         this._pointEdit.removeElement();
-
         this._onDataChange(this._data, null);
       });
 

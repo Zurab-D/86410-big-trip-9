@@ -3,6 +3,12 @@ import moment from 'moment';
 export const MOMENT_DATE_FORMAT = `DD.MM.YY hh:mm`;
 export const FLATPICKR_DATE_FORMAT = `d.m.y H:i`;
 
+export const FilterValues = {
+  everything: `everything`,
+  future: `future`,
+  past: `past`,
+};
+
 export const SortTypes = {
   event: `event`,
   time: `time`,

@@ -5,11 +5,15 @@ import {getDateStrShort, getDateStrShortD, getDateStrMonth} from '../utils';
 export class Trip extends AbstractComponent {
   constructor(arrTripEvents) {
     super();
-    this._arrTripEvents = arrTripEvents.slice(0).sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+    this._arrTripEvents = arrTripEvents;
+  }
+
+  get _events() {
+    return this._arrTripEvents.slice(0).sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
   }
 
   get tripTitle() {
-    return this._arrTripEvents
+    return this._events
       .filter((event) => event.place.type === `sity`)
       .map((event) => event.place.name)
       .reduce((previousValue, sity, idx, arr) => {
@@ -33,17 +37,17 @@ export class Trip extends AbstractComponent {
   }
 
   get tripDates() {
-    const arrLen = this._arrTripEvents.length;
+    const arrLen = this._events.length;
 
-    return getDateStrShort(this._arrTripEvents[0].dateBegin)
+    return getDateStrShort(this._events[0].dateBegin)
       + ` &mdash; `
-      + (getDateStrMonth(this._arrTripEvents[0].dateBegin) === getDateStrMonth(this._arrTripEvents[arrLen - 1].dateBegin)
-        ? getDateStrShortD(this._arrTripEvents[arrLen - 1].dateBegin)
-        : getDateStrShort(this._arrTripEvents[arrLen - 1].dateBegin));
+      + (getDateStrMonth(this._events[0].dateBegin) === getDateStrMonth(this._events[arrLen - 1].dateBegin)
+        ? getDateStrShortD(this._events[arrLen - 1].dateBegin)
+        : getDateStrShort(this._events[arrLen - 1].dateBegin));
   }
 
   get totalCost() {
-    return this._arrTripEvents.reduce((previousValue, event) => {
+    return this._events.reduce((previousValue, event) => {
       return +(previousValue) + +(event.price) + event.offers.reduce((prevOffersSum, offer) =>
         offer.selected ? prevOffersSum + offer.price : prevOffersSum, 0);
     }, 0);

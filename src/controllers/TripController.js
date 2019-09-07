@@ -1,4 +1,4 @@
-import {render, unrender, Position, uniqueDays, SortTypes} from '../utils';
+import {render, Position, uniqueDays, SortTypes, FilterValues} from '../utils';
 
 import {Trip} from '../components/trip';
 import {TripDay} from '../components/trip-day';
@@ -8,14 +8,40 @@ import {PointController} from './PointController';
 
 const SHOW_NO_DAY = -1;
 
+class Observer {
+  constructor() {
+    this._subscriptions = [];
+  }
+
+  subscribe(event, func) {
+    this._subscriptions.push(
+        {event, func}
+    );
+  }
+
+  emit(event) {
+    this._subscriptions
+      .filter((item) => item.event === event)
+      .forEach((item) => {
+        item.func();
+      });
+  }
+}
+
 export class TripController {
   constructor(container, events) {
     this._container = container;
     this._events = events;
+    this._eventsFiltered = this._events;
 
     this._subscribtions = [];
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+
+    this.filtering = new Observer();
+    this.filtering.subscribe(FilterValues.everything, this._filterEventsF(FilterValues.everything, this));
+    this.filtering.subscribe(FilterValues.future, this._filterEventsF(FilterValues.future, this));
+    this.filtering.subscribe(FilterValues.past, this._filterEventsF(FilterValues.past, this));
   }
 
   subscribe(event, func) {
@@ -84,9 +110,8 @@ export class TripController {
 
     const eventList = this.lastDayEventListElem;
 
-
     // events
-    this._events
+    this._eventsFiltered
       // get events for current day
       .filter((eventsItem) => showNoDay === SHOW_NO_DAY || eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
@@ -106,13 +131,13 @@ export class TripController {
     // sort items
     switch (this._sortBy) {
       case SortTypes.time:
-        this._events.sort((eventA, eventB) => eventA.duration < eventB.duration ? 1 : -1);
+        this._eventsFiltered.sort((eventA, eventB) => eventA.duration < eventB.duration ? 1 : -1);
         break;
       case SortTypes.price:
-        this._events.sort((eventA, eventB) => eventA.price < eventB.price ? 1 : -1);
+        this._eventsFiltered.sort((eventA, eventB) => eventA.price < eventB.price ? 1 : -1);
         break;
       default:
-        this._events.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+        this._eventsFiltered.sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
         break;
     }
 
@@ -123,7 +148,7 @@ export class TripController {
     if (this._sortBy !== SortTypes.event) {
       arrTripDays.push(SHOW_NO_DAY);
     } else {
-      arrTripDays = uniqueDays(this._events);
+      arrTripDays = uniqueDays(this._eventsFiltered);
     }
 
     // render all days
@@ -157,15 +182,40 @@ export class TripController {
     } else if (!newData && oldData) {
       // delete event item
       this._events.splice(this._events.indexOf(oldData), 1);
-    } else {
+    } else if (newData && !oldData) {
       // add event item
       this._events.push(newData);
     }
+
     this.renderAllEvents();
 
     // re-render header
-    unrender(this._trip.element);
     this._trip.removeElement();
     render(this.elemTripMain, this._trip.element, Position.afterBegin);
+  }
+
+  _filterEventsF(filterType, self) {
+    // const filterType = filterType;
+    return function () {
+      self._filterEvents(filterType);
+    };
+  }
+
+  _filterEvents(filterType) {
+    switch (filterType) {
+      case FilterValues.everything:
+        this._eventsFiltered = this._events;
+        break;
+
+      case FilterValues.future:
+        this._eventsFiltered = this._events.slice(0).filter((event) => event.dateBegin > Date.now());
+        break;
+
+      case FilterValues.past:
+        this._eventsFiltered = this._events.slice(0).filter((event) => event.dateBegin <= Date.now());
+        break;
+    }
+
+    this.renderAllEvents();
   }
 }

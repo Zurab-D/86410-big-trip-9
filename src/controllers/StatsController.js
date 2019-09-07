@@ -319,5 +319,6 @@ export class StatController {
     this._stats.hide();
     this._destroyMoneyChart();
     this._destroyTransportChart();
+    this._destroyTimeChart();
   }
 }
