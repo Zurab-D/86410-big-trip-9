@@ -144,10 +144,11 @@ export class StatController {
               fontStyle: `bold`,
               fontColor: `#000000`,
               display: false,
+              beginAtZero: true,
             },
             gridLines: {
               display: false,
-              drawBorder: false
+              drawBorder: false,
             },
             minBarLength: 50
           }]
@@ -222,6 +223,7 @@ export class StatController {
               fontStyle: `bold`,
               fontColor: `#000000`,
               display: false,
+              beginAtZero: true,
             },
             gridLines: {
               display: false,
@@ -299,10 +301,11 @@ export class StatController {
               fontStyle: `bold`,
               fontColor: `#000000`,
               display: false,
+              beginAtZero: true,
             },
             gridLines: {
               display: false,
-              drawBorder: false
+              drawBorder: false,
             },
             minBarLength: 50
           }]
