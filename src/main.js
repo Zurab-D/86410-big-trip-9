@@ -25,10 +25,6 @@ const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent));
 const menu = new Menu();
 render(elemTripControlsH, menu.element, Position.afterEnd);
 
-/* // filters
-const filters = new Filter(tripController);
-render(elemTripControls, filters.element);
- */
 // sort
 render(elemTripDays, (new Sort()).element, Position.beforeBegin);
 

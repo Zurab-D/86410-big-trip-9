@@ -24,12 +24,16 @@ export class StatController {
     this._ctxTransport = this._stats.element.querySelector(`.statistics__chart--transport`);
     this._ctxTime = this._stats.element.querySelector(`.statistics__chart--time`);
 
-    this._sumsByTypeArr = this._events.reduce((result, event) => {
-      const sumsItem = result.find((it) => it.name === event.type.name);
-      if (sumsItem) {
-        sumsItem.sum += event.price;
+    this._moneyArr = this._events.reduce((result, event) => {
+      const moneyItem = result.find((it) => it.name === event.type.name);
+      if (moneyItem) {
+        moneyItem.sum += event.price;
       } else {
-        result.push({name: event.type.name, sum: event.price});
+        result.push({
+          name: event.type.name,
+          sum: event.price,
+          emoji: event.type.emoji
+        });
       }
       return result;
     }, []);
@@ -40,7 +44,11 @@ export class StatController {
         if (transportItem) {
           transportItem.count += 1;
         } else {
-          result.push({name: event.type.name, count: 1});
+          result.push({
+            name: event.type.name,
+            count: 1,
+            emoji: event.type.emoji
+          });
         }
       }
       return result;
@@ -51,11 +59,17 @@ export class StatController {
       if (timeItem) {
         timeItem.time += event.duration;
       } else {
-        result.push({name: event.type.name, time: event.duration});
+        result.push({
+          name: event.type.name,
+          time: event.duration,
+          emoji: event.type.emoji
+        });
       }
       return result;
     }, []);
   }
+
+  // event.type.emoji + ` ` +
 
   _destroyMoneyChart() {
     if (this._moneyChart) {
@@ -76,15 +90,15 @@ export class StatController {
   }
 
   _showMoneyChart() {
-    this._ctxMoney.height = this._sumsByTypeArr.length * BAR_THICKNESS;
+    this._ctxMoney.height = this._moneyArr.length * BAR_THICKNESS;
 
     this._moneyChart = new Chart(this._ctxMoney, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: [...this._sumsByTypeArr.map((item) => item.name)],
+        labels: [...this._moneyArr.map((item) => item.emoji + ` ` + item.name)],
         datasets: [{
-          data: [...this._sumsByTypeArr.map((item) => item.sum)],
+          data: [...this._moneyArr.map((item) => item.sum)],
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#ffffff`,
           anchor: `start`
@@ -126,7 +140,6 @@ export class StatController {
             barThickness: BAR_THICKNESS,
           }],
           xAxes: [{
-            minBarLength: 50,
             ticks: {
               fontStyle: `bold`,
               fontColor: `#000000`,
@@ -134,8 +147,9 @@ export class StatController {
             },
             gridLines: {
               display: false,
-              drawBorder: false,
-            }
+              drawBorder: false
+            },
+            minBarLength: 50
           }]
         },
         legend: {
@@ -160,7 +174,7 @@ export class StatController {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: [...this._transportArr.map((item) => item.name)],
+        labels: [...this._transportArr.map((item) => item.emoji + ` ` + item.name)],
         datasets: [{
           data: [...this._transportArr.map((item) => item.count)],
           backgroundColor: `#ffffff`,
@@ -177,12 +191,12 @@ export class StatController {
             color: `#000000`,
             anchor: `end`,
             align: `start`,
-            formatter: (value) => `€ ${value}`
+            formatter: (value) => `${value}x`
           }
         },
         title: {
           display: true,
-          text: `MONEY`,
+          text: `TRANSPORT`,
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`
@@ -200,11 +214,10 @@ export class StatController {
               display: false,
               drawBorder: false
             },
-            minBarLength: 50,
             barThickness: BAR_THICKNESS,
+            minBarLength: 50
           }],
           xAxes: [{
-            minBarLength: 50,
             ticks: {
               fontStyle: `bold`,
               fontColor: `#000000`,
@@ -212,8 +225,9 @@ export class StatController {
             },
             gridLines: {
               display: false,
-              drawBorder: false,
-            }
+              drawBorder: false
+            },
+            minBarLength: 50
           }]
         },
         legend: {
@@ -238,7 +252,7 @@ export class StatController {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: [...this._timeByTypeArr.map((item) => item.name)],
+        labels: [...this._timeByTypeArr.map((item) => item.emoji + ` ` + item.name)],
         datasets: [{
           data: [...this._timeByTypeArr.map((item) => item.time)],
           backgroundColor: `#ffffff`,
@@ -288,8 +302,9 @@ export class StatController {
             },
             gridLines: {
               display: false,
-              drawBorder: false,
-            }
+              drawBorder: false
+            },
+            minBarLength: 50
           }]
         },
         legend: {
