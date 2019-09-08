@@ -1,3 +1,5 @@
+import {unrender} from '../utils';
+
 export class AbstractComponent {
   constructor() {
     this._element = null;
@@ -30,6 +32,7 @@ export class AbstractComponent {
   }
 
   removeElement() {
+    unrender(this.element);
     this._element = null;
   }
 

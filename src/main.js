@@ -5,9 +5,9 @@ import {getEvent} from './data/event';
 import {Menu} from './components/menu';
 import {Filter} from './components/filter';
 import {Sort} from './components/sort';
-import {Statistics} from './components/statistics';
 
 import {TripController} from './controllers/TripController';
+import {StatController} from './controllers/StatsController';
 
 const pageBody = document.querySelector(`.page-body`);
 
@@ -25,19 +25,19 @@ const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent));
 const menu = new Menu();
 render(elemTripControlsH, menu.element, Position.afterEnd);
 
-// filters
-render(elemTripControls, (new Filter()).element);
-
 // sort
 render(elemTripDays, (new Sort()).element, Position.beforeBegin);
 
 // stats
-const stats = new Statistics();
-render(elemTripEvents, stats.element, Position.afterEnd);
-stats.element.classList.add(`visually-hidden`);
+const statController = new StatController(elemTripEvents, arrTripEvents);
 
-export const tripController = new TripController(pageBody, arrTripEvents);
+// whole trip
+const tripController = new TripController(pageBody, arrTripEvents);
 tripController.init();
+
+// filters
+const filters = new Filter(tripController);
+render(elemTripControls, filters.element);
 
 // toggle events/stats
 const menuItems = menu.element.querySelectorAll(`.trip-tabs__btn`);
@@ -54,18 +54,23 @@ menu.element.addEventListener(`click`, (evt) => {
 
   switch (evt.target === menuItems[0]) {
     case true:
-      stats.hide();
+      statController.hide();
+      filters.show();
       tripController.show();
       menuItems[0].classList.add(`trip-tabs__btn--active`);
       break;
 
     default:
-      stats.show();
+      statController.show();
+      filters.hide();
       tripController.hide();
       menuItems[1].classList.add(`trip-tabs__btn--active`);
       break;
   }
 });
+
+// uncomment this to go to the stats directly
+// menu.element.querySelectorAll(`.trip-tabs__btn`)[1].click();
 
 // New event
 elemTripMain

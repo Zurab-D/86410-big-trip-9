@@ -12,12 +12,11 @@ export class TripDay extends AbstractComponent {
 
   get template() {
     return `<li class="trip-days__item  day">
-      <div class="day__info">
+      <div class="day__info">${this._day ? `
         <span class="day__counter">${this._dayIndex}</span>
-        <time class="day__date" datetime="0000-00-00">${getDateStrShort(this._day)}</time>
+        <time class="day__date" datetime="0000-00-00">${getDateStrShort(this._day)}</time>` : ``}
       </div>
-      <ul class="trip-events__list">
-      </ul>
+      <ul class="trip-events__list"></ul>
     </li>`;
   }
 }

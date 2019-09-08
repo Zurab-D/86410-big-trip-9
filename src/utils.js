@@ -3,6 +3,12 @@ import moment from 'moment';
 export const MOMENT_DATE_FORMAT = `DD.MM.YY hh:mm`;
 export const FLATPICKR_DATE_FORMAT = `d.m.y H:i`;
 
+export const FilterValues = {
+  everything: `everything`,
+  future: `future`,
+  past: `past`,
+};
+
 export const SortTypes = {
   event: `event`,
   time: `time`,
@@ -48,6 +54,10 @@ export const createElement = (template) => {
 
 // date to string short format
 export const getDateStrShort = (date) => moment(date).format(`MMM DD`);
+
+export const getDateStrShortD = (date) => moment(date).format(`DD`);
+
+export const getDateStrMonth = (date) => moment(date).format(`MMM`);
 
 export const uniqueDays = (events) => {
   return events.reduce((prevValue, event) => {

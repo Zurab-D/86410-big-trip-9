@@ -7,7 +7,7 @@ export class Statistics extends AbstractComponent {
 
   get template() {
     return `<section class="statistics">
-    <h2>Trip statistics</h2>
+    <h2 class="visually-hidden">Trip statistics</h2>
 
     <div class="statistics__item statistics__item--money">
       <canvas class="statistics__chart  statistics__chart--money" width="900"></canvas>

@@ -1,6 +1,6 @@
 import {AbstractComponent} from './AbstractComponent';
 
-import {getDateStrShort} from '../utils';
+import {getDateStrShort, getDateStrShortD, getDateStrMonth} from '../utils';
 
 export class Trip extends AbstractComponent {
   constructor(arrTripEvents) {
@@ -8,8 +8,12 @@ export class Trip extends AbstractComponent {
     this._arrTripEvents = arrTripEvents;
   }
 
+  get _events() {
+    return this._arrTripEvents.slice(0).sort((eventA, eventB) => eventA.dateBegin > eventB.dateBegin ? 1 : -1);
+  }
+
   get tripTitle() {
-    return this._arrTripEvents
+    return this._events
       .filter((event) => event.place.type === `sity`)
       .map((event) => event.place.name)
       .reduce((previousValue, sity, idx, arr) => {
@@ -33,19 +37,17 @@ export class Trip extends AbstractComponent {
   }
 
   get tripDates() {
-    return this._arrTripEvents.reduce((previousValue, event, idx, arr) => {
-      if (idx === 0) {
-        return getDateStrShort(event.dateBegin);
-      }
-      if (idx === arr.length - 1) {
-        return previousValue + ` &mdash; ` + getDateStrShort(event.dateBegin);
-      }
-      return previousValue;
-    }, ``);
+    const arrLen = this._events.length;
+
+    return getDateStrShort(this._events[0].dateBegin)
+      + ` &mdash; `
+      + (getDateStrMonth(this._events[0].dateBegin) === getDateStrMonth(this._events[arrLen - 1].dateBegin)
+        ? getDateStrShortD(this._events[arrLen - 1].dateBegin)
+        : getDateStrShort(this._events[arrLen - 1].dateBegin));
   }
 
   get totalCost() {
-    return this._arrTripEvents.reduce((previousValue, event) => {
+    return this._events.reduce((previousValue, event) => {
       return +(previousValue) + +(event.price) + event.offers.reduce((prevOffersSum, offer) =>
         offer.selected ? prevOffersSum + offer.price : prevOffersSum, 0);
     }, 0);
