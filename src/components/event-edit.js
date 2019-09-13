@@ -20,7 +20,7 @@ export class EventEdit extends AbstractComponent {
     this._duration = duration;
     this._price = price;
     this._offers = offers;
-    this._photos = photos;
+    this._photos = photos.map((photo) => photo.src);
 
     this._favorite = favorite;
 
@@ -44,6 +44,9 @@ export class EventEdit extends AbstractComponent {
   }
 
   init() {
+    // console.log(`init`);
+    // console.log(this);
+
     this._typeElem = this.element.querySelector(`.event__type-toggle`);
     this._eventOffersEl = this.element.querySelector(`.event__section--offers`);
     this._subscribe(`typeModified`, this.typeModified.bind(this));

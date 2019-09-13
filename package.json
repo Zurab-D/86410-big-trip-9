@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "eslint": "eslint src/**/*.js",
-    "start": "webpack-dev-server --open",
+    "start": "start.cmd",
+    "dev": "webpack-dev-server --open",
     "test": "npm run eslint",
     "serv": "json-server --watch server/data.json --port 3003"
   },

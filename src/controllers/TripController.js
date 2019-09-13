@@ -5,6 +5,7 @@ import {TripDay} from '../components/trip-day';
 import {NoPoints} from '../components/no-points';
 
 import {PointController} from './PointController';
+import { API } from '../api';
 
 const SHOW_NO_DAY = -1;
 
@@ -29,10 +30,11 @@ class Observer {
 }
 
 export class TripController {
-  constructor(container, events) {
+  constructor(container, events, api) {
     this._container = container;
     this._events = events;
     this._eventsFiltered = this._events;
+    this._api = api;
 
     this._subscribtions = [];
     this._onChangeView = this._onChangeView.bind(this);
@@ -177,17 +179,28 @@ export class TripController {
 
   // method:
   _onDataChange(oldData, newData) {
+    // console.log(oldData);
+    // console.log(oldData.toRAW());
+    // console.log(newData);
+    // console.log(newData.toRAW());
+
     if (newData && oldData) {
       Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
+      this._api.updatePoint({id: newData.id, data: newData.toRAW()});
     } else if (!newData && oldData) {
       // delete event item
       this._events.splice(this._events.indexOf(oldData), 1);
+      this._api.deletePoint({id: oldData.id});
     } else if (newData && !oldData) {
       // add event item
       this._events.push(newData);
+      this._api.createPoint({point: newData.toRAW()});
     }
 
     this.renderAllEvents();
+
+console.log(this._events);
+
 
     // re-render header
     this._trip.removeElement();

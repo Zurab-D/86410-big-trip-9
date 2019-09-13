@@ -7,6 +7,8 @@ import {arrEventTypes} from '../data/event-types';
 import {arrPlaces} from '../data/places';
 import {getEventEmpty} from '../data/event';
 
+import {ModelPoint} from '../model-point';
+
 export class PointController {
   constructor(container, data, onDataChange, onChangeView) {
     this._container = container;
@@ -59,6 +61,7 @@ export class PointController {
         const formData = new FormData(this._pointEdit.element.querySelector(`.event--edit`));
 
         const entry = {
+          id: this._data.id,
           type: arrEventTypes.find((it) => it.name === formData.get(`event-type`)),
           place: arrPlaces.find((it) => it.name === formData.get(`event-destination`)),
           description: this._pointEdit._description,
@@ -77,13 +80,19 @@ export class PointController {
               it.selected = false;
               return it;
             })),
-          photos: this._pointEdit._photos,
+          photos: this._data.photos,
         };
 
-        this._onDataChange(this.isNew ? null : this._data, entry);
+        // console.log(ModelPoint.toRAW(entry));
+        // console.log(`entry`);
+        // console.log(entry);
+
+        // insert or edit event
+        this._onDataChange(this.isNew ? null : this._data, (new ModelPoint(ModelPoint.toRAW(entry))));
 
         document.removeEventListener(`keydown`, onEscKeyDown);
         this._container.replaceChild(this._pointView.element, this._pointEdit.element);
+
       });
 
     // delete event

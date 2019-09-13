@@ -8,10 +8,11 @@ import {Sort} from './components/sort';
 
 import {TripController} from './controllers/TripController';
 import {StatController} from './controllers/StatsController';
+import { arrEventTypes } from './data/event-types';
 
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
-const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip/`;
-// const END_POINT = `http://localhost:3003`;  // for json-server
+// const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip/`;
+const END_POINT = `http://localhost:3003`;  // for json-server
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 const pageBody = document.querySelector(`.page-body`);
@@ -26,6 +27,8 @@ const elemTripDays = elemTripEvents.querySelector(`.trip-days`);
 // const arrTripEvents = (new Array(EVENT_COUNT).fill().map(getEvent));
 api.getPoints()
   .then((arrTripEvents) => {
+    console.log(arrTripEvents);
+
     // menu
     const menu = new Menu();
     render(elemTripControlsH, menu.element, Position.afterEnd);
@@ -37,7 +40,7 @@ api.getPoints()
     const statController = new StatController(elemTripEvents, arrTripEvents);
 
     // whole trip
-    const tripController = new TripController(pageBody, arrTripEvents);
+    const tripController = new TripController(pageBody, arrTripEvents, api);
     tripController.init();
 
     // filters
