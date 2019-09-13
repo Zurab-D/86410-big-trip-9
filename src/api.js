@@ -1,3 +1,5 @@
+import {ModelPoint} from './model-point';
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -18,7 +20,7 @@ const toJSON = (response) => {
 };
 
 
-const API = class {
+export const API = class {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -26,7 +28,8 @@ const API = class {
 
   getPoints() {
     return this._load({url: `points`})
-      .then(toJSON);
+      .then(toJSON)
+      .then(ModelPoint.parsePoints);
   }
 
   createPoint({point}) {
@@ -36,7 +39,8 @@ const API = class {
       body: JSON.stringify(point),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then(toJSON);
+      .then(toJSON)
+      .then(ModelPoint.parsePoint);
   }
 
   updatePoint({id, data}) {
@@ -46,7 +50,8 @@ const API = class {
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then(toJSON);
+      .then(toJSON)
+      .then(ModelPoint.parsePoint);
   }
 
   deletePoint({id}) {
@@ -59,7 +64,7 @@ const API = class {
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)
       .catch((err) => {
-        console.error(`fetch error: ${err}`);
+        // console.error(`fetch error: ${err}`);
         throw err;
       });
   }

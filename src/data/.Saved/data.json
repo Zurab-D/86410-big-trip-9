@@ -1,0 +1,69 @@
+{
+  "points": [{
+    "base_price": 1100,
+    "date_from": "2019-07-10T22:55:56.845Z",
+    "date_to": "2019-07-11T11:22:13.375Z",
+    "destination": {
+      "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "Chamonix",
+      "pictures": [{
+          "src": "http://picsum.photos/300/200?r=0.0762563005163317",
+          "description": "Chamonix parliament building"
+        }
+      ]
+    },
+    "id": "0",
+    "is_favorite": false,
+    "offers": [{
+        "type": "taxi",
+        "offers": [{
+            "name": "Upgrade to a business class",
+            "price": 120
+          }, {
+            "name": "Choose the radio station",
+            "price": 60
+          }
+        ]
+      }, {
+        "type": "bus",
+        "offers": [
+          {
+            "name": "Get a BIG one",
+            "price": 120
+          }, {
+            "name": "Choose the driver sex",
+            "price": 600
+          }
+        ]
+      }
+    ],
+    "type": "bus"
+  }],
+
+  "offers": [{
+    "id": "add-luggage",
+    "name": "Add luggage",
+    "price": 10,
+    "selected": true
+  }, {
+    "id": "switch-to-comfort-class",
+    "name": "Switch to comfort class",
+    "price": 150,
+    "selected": false
+  }, {
+    "id": "Add-meal",
+    "name": "Add meal",
+    "price": 2,
+    "selected": false
+  }, {
+    "id": "Choose-seats",
+    "name": "Choose seats",
+    "price": 9,
+    "selected": true
+  }, {
+    "id": "Travel-by-train",
+    "name": "Travel by train",
+    "price": 40,
+    "selected": false
+  }]
+}
