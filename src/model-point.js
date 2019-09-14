@@ -70,8 +70,6 @@ export class ModelPoint {
   }
 
   static toRAW(data) {
-    console.log(data);
-
     return {
       id: data.id,
       base_price: data.price,
@@ -83,26 +81,7 @@ export class ModelPoint {
         pictures: data.photos
       },
       is_favorite: data.favorite,
-      offers: data.offers/*
-        .reduce((prev, offerItem) => {
-          if (!prev.includes(offerItem.type)) {
-            prev.push(offerItem.type);
-          }
-          return prev;
-        }, [])
-        .reduce((prev, offerType) => {
-          const filteredOffers = data.offers.filter((offer) => offer.type === offerType);
-          prev.push({
-            type: offerType,
-            offers: filteredOffers.map((offerIt) => {
-              return {
-                name: offerIt.name,
-                price: offerIt.price
-              };
-            })
-          });
-          return prev;
-        }, []) */,
+      offers: data.offers,
       type: data.type.name.toLowerCase()
     };
   }
