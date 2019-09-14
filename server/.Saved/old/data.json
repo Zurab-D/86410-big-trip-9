@@ -343,10 +343,9 @@
       "type": "bus"
     },
     {
-      "id": "6",
       "base_price": 1100,
-      "date_from": "2019-07-11T01:55:04.044+0300",
-      "date_to": "2019-07-12T02:21:04.044+0300",
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
       "destination": {
         "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
         "name": "Chamonix",
@@ -357,7 +356,8 @@
           }
         ]
       },
-      "is_favorite": true,
+      "id": "6",
+      "is_favorite": false,
       "offers": [
         {
           "type": "taxi",
@@ -387,20 +387,6 @@
         }
       ],
       "type": "bus"
-    },
-    {
-      "base_price": 123,
-      "date_from": "2019-09-13T10:36:10.1010+0300",
-      "date_to": "2019-09-13T10:36:10.1010+0300",
-      "destination": {
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed nisi sed augue convallis suscipit in sed felis",
-        "name": "Saint Petersburg",
-        "pictures": []
-      },
-      "is_favorite": false,
-      "offers": [],
-      "type": "ship",
-      "id": "qmO69O8"
     }
   ],
   "offers": [

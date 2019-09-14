@@ -150,26 +150,39 @@ export class TripController {
     this.emit(`view`);
   }
 
+  // re-render the header
+  _reRenderHeader() {
+    this._trip.removeElement();
+    render(this.elemTripMain, this._trip.element, Position.afterBegin);
+  }
+
   // method:
   _onDataChange(oldData, newData) {
     if (newData && oldData) {
-      Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
-      this._api.updatePoint({id: newData.id, data: newData.toRAW()});
+      // modify event item
+      this._api.updatePoint({id: newData.id, data: newData.toRAW()})
+        .then((modifiedEvent) => {
+          Object.assign(this._events[this._events.findIndex((event) => event === oldData)], modifiedEvent);
+          this.renderAllEvents();
+          this._reRenderHeader();
+        });
     } else if (!newData && oldData) {
       // delete event item
-      this._events.splice(this._events.indexOf(oldData), 1);
-      this._api.deletePoint({id: oldData.id});
+      this._api.deletePoint({id: oldData.id})
+        .then(() => {
+          this._events.splice(this._events.indexOf(oldData), 1);
+          this.renderAllEvents();
+          this._reRenderHeader();
+        });
     } else if (newData && !oldData) {
       // add event item
-      this._events.push(newData);
-      this._api.createPoint({point: newData.toRAW()});
+      this._api.createPoint({point: newData.toRAW()})
+        .then((addedEvent) => {
+          this._events.push(addedEvent);
+          this.renderAllEvents();
+          this._reRenderHeader();
+        });
     }
-
-    this.renderAllEvents();
-
-    // re-render header
-    this._trip.removeElement();
-    render(this.elemTripMain, this._trip.element, Position.afterBegin);
   }
 
   _filterEventsF(filterType, self) {
