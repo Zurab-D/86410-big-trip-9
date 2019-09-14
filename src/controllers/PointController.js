@@ -26,37 +26,46 @@ export class PointController {
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
 
+    this._onEscKeyDownBinded = this._onEscKeyDown.bind(this);
+
     this._init();
+  }
+
+  _onEscKeyDown(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      document.removeEventListener(`keydown`, this._onEscKeyDownBinded);
+      this._container.replaceChild(this._pointView.element, this._pointEdit.element);
+    }
+  }
+
+  _addRollupEventToView() {
+    this._pointView.element.querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        this._onChangeView();
+        document.addEventListener(`keydown`, this._onEscKeyDownBinded);
+        this._container.replaceChild(this._pointEdit.element, this._pointView.element);
+      });
   }
 
   _init() {
     render(this._container, this._pointView.element, this.isNew ? Position.afterBegin : undefined);
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        document.removeEventListener(`keydown`, onEscKeyDown);
-        this._container.replaceChild(this._pointView.element, this._pointEdit.element);
-      }
-    };
-
-    this._pointView.element.querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        this._onChangeView();
-        document.addEventListener(`keydown`, onEscKeyDown);
-        this._container.replaceChild(this._pointEdit.element, this._pointView.element);
-      });
+    this._addRollupEventToView();
 
     this._pointEdit.element.querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, () => {
-        document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, this._onEscKeyDownBinded);
         this._container.replaceChild(this._pointView.element, this._pointEdit.element);
       });
-
 
     this._pointEdit.element
       .addEventListener(`submit`, (evt) => {
         evt.preventDefault();
+        const self = this;
+
+        // remove red outline from the edit form
+        this._pointEdit.outlineForm(false);
 
         const formData = new FormData(this._pointEdit.element.querySelector(`.event--edit`));
 
@@ -83,35 +92,61 @@ export class PointController {
           photos: this._data.photos,
         };
 
-        // insert or edit event
-        this._onDataChange(this.isNew ? null : this._data, (new ModelPoint(ModelPoint.toRAW(entry))));
+        this._pointEdit.lockForm();
 
-        document.removeEventListener(`keydown`, onEscKeyDown);
-        this._container.replaceChild(this._pointView.element, this._pointEdit.element);
+        // insert or edit event
+        this._onDataChange(this.isNew ? null : this._data, (new ModelPoint(ModelPoint.toRAW(entry))),
+            () => {
+              self.setDefaultView(true);
+            },
+            () => {
+              // add red outline to the editing form
+              self._pointEdit.outlineForm();
+              self._pointEdit.unlockForm();
+            }
+        );
+
+        document.removeEventListener(`keydown`, this._onEscKeyDownBinded);
       });
 
     // delete event
     this._pointEdit.element
-      .addEventListener(`reset`, () => {
-        document.removeEventListener(`keydown`, onEscKeyDown);
-        this._pointView.removeElement();
-        this._pointEdit.removeElement();
-        this._onDataChange(this._data, null);
+      .addEventListener(`reset`, (evt) => {
+        evt.preventDefault();
+        const self = this;
+
+        // remove red outline from the edit form
+        this._pointEdit.outlineForm(false);
+
+        document.removeEventListener(`keydown`, this._onEscKeyDownBinded);
+        this._onDataChange(this._data, null, () => {
+          self._pointView.removeElement();
+          self._pointEdit.removeElement();
+        }, () => {
+          // add red outline to the editing form
+          self._pointEdit.outlineForm();
+          self._pointEdit.unlockForm();
+        });
       });
 
     this._pointEdit.element.querySelectorAll(`input`).forEach((elem) => {
       elem.addEventListener(`focus`, () => {
-        document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, this._onEscKeyDownBinded);
       });
 
       elem.addEventListener(`blur`, () => {
-        document.addEventListener(`keydown`, onEscKeyDown);
+        document.addEventListener(`keydown`, this._onEscKeyDownBinded);
       });
     });
   }
 
-  setDefaultView() {
+  setDefaultView(refresh) {
     if (this._container.contains(this._pointEdit.element)) {
+      if (refresh) {
+        this._pointView.refresh(this._data);
+        this._addRollupEventToView();
+      }
+      this._pointEdit.unlockForm();
       this._container.replaceChild(this._pointView.element, this._pointEdit.element);
     }
   }

@@ -3,7 +3,7 @@ import {AbstractComponent} from './AbstractComponent';
 import {formatDate, getDuration} from '../utils';
 
 export class EventItem extends AbstractComponent {
-  constructor({type, place, dateBegin, duration, price, offers}) {
+  constructor({type, place, dateBegin, duration, price, offers, id}) {
     super();
     this._type = type;
     this._place = place;
@@ -11,10 +11,11 @@ export class EventItem extends AbstractComponent {
     this._duration = duration;
     this._price = price;
     this._offers = offers;
+    this._id = id;
   }
 
   get template() {
-    return `<li class="trip-events__item">
+    return `<li class="trip-events__item" data-id="${this._id}">
     <div class="event">
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type.icon}" alt="Event type icon">
@@ -49,5 +50,16 @@ export class EventItem extends AbstractComponent {
         <span class="visually-hidden">Open event</span>
       </button>
     </div></li>`;
+  }
+
+  refresh({type, place, dateBegin, duration, price, offers, id}) {
+    this._type = type;
+    this._place = place;
+    this._dateBegin = dateBegin;
+    this._duration = duration;
+    this._price = price;
+    this._offers = offers;
+    this._id = id;
+    this._element.innerHTML = this.template;
   }
 }

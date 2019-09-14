@@ -45,26 +45,32 @@ export class ModelPoint {
         pictures: this.photos
       },
       is_favorite: this.favorite,
-      offers: this.offers
-        .reduce((prev, offerItem) => {
-          if (!prev.includes(offerItem.type)) {
-            prev.push(offerItem.type);
-          }
-          return prev;
-        }, [])
-        .reduce((prev, offerType) => {
-          const filteredOffers = this.offers.filter((offer) => offer.type === offerType);
-          prev.push({
-            type: offerType,
-            offers: filteredOffers.map((offerIt) => {
-              return {
-                name: offerIt.name,
-                price: offerIt.price
-              };
-            })
-          });
-          return prev;
-        }, []),
+      offers: this.offers.map((offer) => {
+        return {
+          title: offer.name,
+          price: offer.price,
+          accepted: offer.selected
+        };
+      }),
+      /* .reduce((prev, offerItem) => {
+        if (!prev.includes(offerItem.type)) {
+          prev.push(offerItem.type);
+        }
+        return prev;
+      }, [])
+      .reduce((prev, offerType) => {
+        const filteredOffers = this.offers.filter((offer) => offer.type === offerType);
+        prev.push({
+          type: offerType,
+          offers: filteredOffers.map((offerIt) => {
+            return {
+              name: offerIt.name,
+              price: offerIt.price
+            };
+          })
+        });
+        return prev;
+      }, []) */
       type: this.type.name.toLowerCase()
     };
   }

@@ -8,6 +8,13 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
+const RED_OUTLINE = `3px solid red`;
+
+const SubmitTitle = {
+  saving: `Saving...`,
+  save: `Save`
+};
+
 export class EventEdit extends AbstractComponent {
   constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}, arrPlaces) {
     super();
@@ -239,5 +246,29 @@ export class EventEdit extends AbstractComponent {
         </section>
       </section>
     </form></li>`;
+  }
+
+  lockForm() {
+    this._element.querySelectorAll(`.event--edit input, .event--edit  button`).forEach((elem) => {
+      elem.setAttribute(`disabled`, `disabled`);
+    });
+    this._element.querySelector(`.event--edit .event__save-btn`).innerText = SubmitTitle.saving;
+  }
+
+  unlockForm() {
+    this._element.querySelectorAll(`.event--edit input, .event--edit  button`).forEach((elem) => {
+      elem.removeAttribute(`disabled`);
+    });
+    this._element.querySelector(`.event--edit .event__save-btn`).innerText = SubmitTitle.save;
+  }
+
+  outlineForm(setOutline = true) {
+    if (setOutline) {
+      this.element.querySelector(`.event--edit`).style.outline = RED_OUTLINE;
+      this.element.querySelector(`.event--edit`).classList.add(`shake`);
+    } else {
+      this.element.querySelector(`.event--edit`).style.outline = ``;
+      this.element.querySelector(`.event--edit`).classList.remove(`shake`);
+    }
   }
 }
