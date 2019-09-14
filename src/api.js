@@ -32,6 +32,11 @@ export const API = class {
       .then(ModelPoint.parsePoints);
   }
 
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then(toJSON);
+  }
+
   createPoint({point}) {
     return this._load({
       url: `points`,
@@ -44,8 +49,6 @@ export const API = class {
   }
 
   updatePoint({id, data}) {
-    console.log(`id=${id}`);
-
     return this._load({
       url: `points/${id}`,
       method: Method.PUT,
@@ -66,7 +69,7 @@ export const API = class {
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)
       .catch((err) => {
-        // console.error(`fetch error: ${err}`);
+        console.error(`fetch error: ${err}`);
         throw err;
       });
   }

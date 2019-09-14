@@ -14,7 +14,7 @@ export class Trip extends AbstractComponent {
 
   get tripTitle() {
     return this._events
-      .filter((event) => event.place.type === `sity`)
+      // .filter((event) => event.place.type === `sity`)
       .map((event) => event.place.name)
       .reduce((previousValue, sity, idx, arr) => {
         if (idx === 0) {

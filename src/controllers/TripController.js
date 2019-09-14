@@ -5,7 +5,6 @@ import {TripDay} from '../components/trip-day';
 import {NoPoints} from '../components/no-points';
 
 import {PointController} from './PointController';
-import { API } from '../api';
 
 const SHOW_NO_DAY = -1;
 
@@ -30,9 +29,10 @@ class Observer {
 }
 
 export class TripController {
-  constructor(container, events, api) {
+  constructor(container, events, places, api) {
     this._container = container;
     this._events = events;
+    this._places = places;
     this._eventsFiltered = this._events;
     this._api = api;
 
@@ -117,14 +117,14 @@ export class TripController {
       // get events for current day
       .filter((eventsItem) => showNoDay === SHOW_NO_DAY || eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
-        const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
+        const pointController = new PointController(eventList, event, this._places, this._onDataChange, this._onChangeView);
         this.subscribe(`view`, pointController.setDefaultView.bind(pointController));
       });
   }
 
   // method: rendfer all events
   createTripEvent() {
-    const pointController = new PointController(this.firstDayEventListElem, null, this._onDataChange, this._onChangeView);
+    const pointController = new PointController(this.firstDayEventListElem, null, this._places, this._onDataChange, this._onChangeView);
     pointController._pointView.element.querySelector(`.event__rollup-btn`).click();
   }
 
@@ -179,11 +179,6 @@ export class TripController {
 
   // method:
   _onDataChange(oldData, newData) {
-    // console.log(oldData);
-    // console.log(oldData.toRAW());
-    // console.log(newData);
-    // console.log(newData.toRAW());
-
     if (newData && oldData) {
       Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
       this._api.updatePoint({id: newData.id, data: newData.toRAW()});
@@ -199,16 +194,12 @@ export class TripController {
 
     this.renderAllEvents();
 
-console.log(this._events);
-
-
     // re-render header
     this._trip.removeElement();
     render(this.elemTripMain, this._trip.element, Position.afterBegin);
   }
 
   _filterEventsF(filterType, self) {
-    // const filterType = filterType;
     return function () {
       self._filterEvents(filterType);
     };

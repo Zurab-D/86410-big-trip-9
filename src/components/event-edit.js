@@ -1,6 +1,5 @@
 import {AbstractComponent} from './AbstractComponent';
 import {formatDate, FLATPICKR_DATE_FORMAT} from '../utils';
-import {arrPlaces} from '../data/places';
 import {arrEventTypes} from '../data/event-types';
 import {arrOffers} from '../data/offers';
 import {loremIpsum} from '../data/event';
@@ -10,7 +9,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
 export class EventEdit extends AbstractComponent {
-  constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}) {
+  constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}, arrPlaces) {
     super();
     this._type = type;
     this._typeSelected = undefined;
@@ -21,8 +20,9 @@ export class EventEdit extends AbstractComponent {
     this._price = price;
     this._offers = offers;
     this._photos = photos.map((photo) => photo.src);
-
     this._favorite = favorite;
+
+    this._arrPlaces = arrPlaces;
 
     this._subscribtions = [];
 
@@ -44,9 +44,6 @@ export class EventEdit extends AbstractComponent {
   }
 
   init() {
-    // console.log(`init`);
-    // console.log(this);
-
     this._typeElem = this.element.querySelector(`.event__type-toggle`);
     this._eventOffersEl = this.element.querySelector(`.event__section--offers`);
     this._subscribe(`typeModified`, this.typeModified.bind(this));
@@ -89,7 +86,7 @@ export class EventEdit extends AbstractComponent {
       this._type = arrEventTypes.find((type) => type.name === this._typeSelected);
 
       this._offers = arrOffers.slice(0, Math.floor(Math.random() * 3));
-      this._place = this._place.name ? arrPlaces[Math.floor(Math.random() * arrPlaces.length)] : {name: ``, type: ``};
+      this._place = this._place.name ? this._arrPlaces[Math.floor(Math.random() * this._arrPlaces.length)] : {name: ``, type: ``};
 
       this._eventOffersEl.innerHTML = this.offersTemplate;
       this._eventFieldDestEl.innerHTML = this.destinationTmpl;
@@ -148,7 +145,7 @@ export class EventEdit extends AbstractComponent {
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._place.name}" list="destination-list-1">
       <datalist id="destination-list-1">
-        ${arrPlaces.map((placeItem) => `
+        ${this._arrPlaces.map((placeItem) => `
         <option value="${placeItem.name}"></option>
         `).join(``)}
       </datalist>`;

@@ -6,10 +6,8 @@
   "scripts": {
     "build": "webpack",
     "eslint": "eslint src/**/*.js",
-    "start": "start.cmd",
-    "dev": "webpack-dev-server --open",
-    "test": "npm run eslint",
-    "serv": "json-server --watch server/data.json --port 3003"
+    "start": "webpack-dev-server --open",
+    "test": "npm run eslint"
   },
   "devDependencies": {
     "css-loader": "3.2.0",

@@ -1,6 +1,6 @@
 // List of places
 
-export const arrPlaces = [
+/* export const arrPlaces = [
   {name: `Amsterdam`, type: `sity`},
   {name: `Geneva`, type: `sity`},
   {name: `Chamonix`, type: `sity`},
@@ -9,3 +9,4 @@ export const arrPlaces = [
   {name: `hotel`, type: `hotel`},
   {name: `Natural History Museum`, type: `museum`},
 ];
+ */
