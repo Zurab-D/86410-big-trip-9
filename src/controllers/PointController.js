@@ -82,9 +82,6 @@ export class PointController {
             })),
           photos: this._data.photos,
         };
-        // console.log(entry);
-        // console.log(ModelPoint.toRAW(entry));
-
 
         // insert or edit event
         this._onDataChange(this.isNew ? null : this._data, (new ModelPoint(ModelPoint.toRAW(entry))));

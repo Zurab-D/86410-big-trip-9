@@ -1,4 +1,4 @@
-import {render, Position, uniqueDays, SortTypes, FilterValues} from '../utils';
+import {render, Position, uniqueDays, SortTypes, FilterValues, Observer} from '../utils';
 
 import {Trip} from '../components/trip';
 import {TripDay} from '../components/trip-day';
@@ -8,26 +8,6 @@ import {PointController} from './PointController';
 
 const SHOW_NO_DAY = -1;
 
-class Observer {
-  constructor() {
-    this._subscriptions = [];
-  }
-
-  subscribe(event, func) {
-    this._subscriptions.push(
-        {event, func}
-    );
-  }
-
-  emit(event) {
-    this._subscriptions
-      .filter((item) => item.event === event)
-      .forEach((item) => {
-        item.func();
-      });
-  }
-}
-
 export class TripController {
   constructor(container, events, places, api) {
     this._container = container;
@@ -36,28 +16,21 @@ export class TripController {
     this._eventsFiltered = this._events;
     this._api = api;
 
-    this._subscribtions = [];
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
 
-    this.filtering = new Observer();
-    this.filtering.subscribe(FilterValues.everything, this._filterEventsF(FilterValues.everything, this));
-    this.filtering.subscribe(FilterValues.future, this._filterEventsF(FilterValues.future, this));
-    this.filtering.subscribe(FilterValues.past, this._filterEventsF(FilterValues.past, this));
+    this.observer = new Observer();
+    this.subscribe(FilterValues.everything, this._filterEventsF(FilterValues.everything, this));
+    this.subscribe(FilterValues.future, this._filterEventsF(FilterValues.future, this));
+    this.subscribe(FilterValues.past, this._filterEventsF(FilterValues.past, this));
   }
 
   subscribe(event, func) {
-    this._subscribtions.push(
-        {event, func}
-    );
+    this.observer.subscribe(event, func);
   }
 
   emit(event) {
-    this._subscribtions
-      .filter((subscr) => subscr.event === event)
-      .forEach((subscr) => {
-        subscr.func();
-      });
+    this.observer.emit(event);
   }
 
   // method: init
