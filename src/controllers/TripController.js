@@ -157,15 +157,18 @@ export class TripController {
   }
 
   // method:
-  _onDataChange(oldData, newData) {
+  _onDataChange(oldData, newData, onSuccess, onError) {
     if (newData && oldData) {
       // modify event item
       this._api.updatePoint({id: newData.id, data: newData.toRAW()})
         .then((modifiedEvent) => {
           Object.assign(this._events[this._events.findIndex((event) => event === oldData)], modifiedEvent);
-          this.renderAllEvents();
           this._reRenderHeader();
-        });
+          if (onSuccess) {
+            onSuccess();
+          }
+        })
+        .catch(onError);
     } else if (!newData && oldData) {
       // delete event item
       this._api.deletePoint({id: oldData.id})
