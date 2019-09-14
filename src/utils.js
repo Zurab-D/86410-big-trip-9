@@ -23,6 +23,26 @@ export const Position = {
   afterEnd: `afterEnd`
 };
 
+export class Observer {
+  constructor() {
+    this._subscriptions = [];
+  }
+
+  subscribe(event, func) {
+    this._subscriptions.push(
+        {event, func}
+    );
+  }
+
+  emit(event) {
+    this._subscriptions
+      .filter((item) => item.event === event)
+      .forEach((item) => {
+        item.func();
+      });
+  }
+}
+
 export const render = (container, element, position = Position.beforeEnd) => {
   switch (position) {
     case Position.beforeBegin:

@@ -4,11 +4,12 @@ import {EventEdit} from '../components/event-edit';
 import {EventItem} from '../components/event-item';
 
 import {arrEventTypes} from '../data/event-types';
-import {arrPlaces} from '../data/places';
 import {getEventEmpty} from '../data/event';
 
+import {ModelPoint} from '../model-point';
+
 export class PointController {
-  constructor(container, data, onDataChange, onChangeView) {
+  constructor(container, data, arrPlaces, onDataChange, onChangeView) {
     this._container = container;
     if (data) {
       this._data = data;
@@ -18,7 +19,8 @@ export class PointController {
       this.isNew = true;
     }
 
-    this._pointEdit = new EventEdit(this._data);
+    this._arrPlaces = arrPlaces;
+    this._pointEdit = new EventEdit(this._data, this._arrPlaces);
     this._pointView = new EventItem(this._data);
 
     this._onChangeView = onChangeView;
@@ -59,8 +61,9 @@ export class PointController {
         const formData = new FormData(this._pointEdit.element.querySelector(`.event--edit`));
 
         const entry = {
+          id: this._data.id,
           type: arrEventTypes.find((it) => it.name === formData.get(`event-type`)),
-          place: arrPlaces.find((it) => it.name === formData.get(`event-destination`)),
+          place: this._arrPlaces.find((it) => it.name === formData.get(`event-destination`)),
           description: this._pointEdit._description,
           dateBegin: strToDate(formData.get(`event-start-time`)).getTime(),
           duration: strToDate(formData.get(`event-end-time`)).getTime() - strToDate(formData.get(`event-start-time`)).getTime(),
@@ -77,10 +80,11 @@ export class PointController {
               it.selected = false;
               return it;
             })),
-          photos: this._pointEdit._photos,
+          photos: this._data.photos,
         };
 
-        this._onDataChange(this.isNew ? null : this._data, entry);
+        // insert or edit event
+        this._onDataChange(this.isNew ? null : this._data, (new ModelPoint(ModelPoint.toRAW(entry))));
 
         document.removeEventListener(`keydown`, onEscKeyDown);
         this._container.replaceChild(this._pointView.element, this._pointEdit.element);

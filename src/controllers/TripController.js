@@ -1,4 +1,4 @@
-import {render, Position, uniqueDays, SortTypes, FilterValues} from '../utils';
+import {render, Position, uniqueDays, SortTypes, FilterValues, Observer} from '../utils';
 
 import {Trip} from '../components/trip';
 import {TripDay} from '../components/trip-day';
@@ -8,54 +8,29 @@ import {PointController} from './PointController';
 
 const SHOW_NO_DAY = -1;
 
-class Observer {
-  constructor() {
-    this._subscriptions = [];
-  }
-
-  subscribe(event, func) {
-    this._subscriptions.push(
-        {event, func}
-    );
-  }
-
-  emit(event) {
-    this._subscriptions
-      .filter((item) => item.event === event)
-      .forEach((item) => {
-        item.func();
-      });
-  }
-}
-
 export class TripController {
-  constructor(container, events) {
+  constructor(container, events, places, api) {
     this._container = container;
     this._events = events;
+    this._places = places;
     this._eventsFiltered = this._events;
+    this._api = api;
 
-    this._subscribtions = [];
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
 
-    this.filtering = new Observer();
-    this.filtering.subscribe(FilterValues.everything, this._filterEventsF(FilterValues.everything, this));
-    this.filtering.subscribe(FilterValues.future, this._filterEventsF(FilterValues.future, this));
-    this.filtering.subscribe(FilterValues.past, this._filterEventsF(FilterValues.past, this));
+    this.observer = new Observer();
+    this.subscribe(FilterValues.everything, this._filterEventsF(FilterValues.everything, this));
+    this.subscribe(FilterValues.future, this._filterEventsF(FilterValues.future, this));
+    this.subscribe(FilterValues.past, this._filterEventsF(FilterValues.past, this));
   }
 
   subscribe(event, func) {
-    this._subscribtions.push(
-        {event, func}
-    );
+    this.observer.subscribe(event, func);
   }
 
   emit(event) {
-    this._subscribtions
-      .filter((subscr) => subscr.event === event)
-      .forEach((subscr) => {
-        subscr.func();
-      });
+    this.observer.emit(event);
   }
 
   // method: init
@@ -115,14 +90,14 @@ export class TripController {
       // get events for current day
       .filter((eventsItem) => showNoDay === SHOW_NO_DAY || eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
-        const pointController = new PointController(eventList, event, this._onDataChange, this._onChangeView);
+        const pointController = new PointController(eventList, event, this._places, this._onDataChange, this._onChangeView);
         this.subscribe(`view`, pointController.setDefaultView.bind(pointController));
       });
   }
 
   // method: rendfer all events
   createTripEvent() {
-    const pointController = new PointController(this.firstDayEventListElem, null, this._onDataChange, this._onChangeView);
+    const pointController = new PointController(this.firstDayEventListElem, null, this._places, this._onDataChange, this._onChangeView);
     pointController._pointView.element.querySelector(`.event__rollup-btn`).click();
   }
 
@@ -179,12 +154,15 @@ export class TripController {
   _onDataChange(oldData, newData) {
     if (newData && oldData) {
       Object.assign(this._events[this._events.findIndex((event) => event === oldData)], newData);
+      this._api.updatePoint({id: newData.id, data: newData.toRAW()});
     } else if (!newData && oldData) {
       // delete event item
       this._events.splice(this._events.indexOf(oldData), 1);
+      this._api.deletePoint({id: oldData.id});
     } else if (newData && !oldData) {
       // add event item
       this._events.push(newData);
+      this._api.createPoint({point: newData.toRAW()});
     }
 
     this.renderAllEvents();
@@ -195,7 +173,6 @@ export class TripController {
   }
 
   _filterEventsF(filterType, self) {
-    // const filterType = filterType;
     return function () {
       self._filterEvents(filterType);
     };

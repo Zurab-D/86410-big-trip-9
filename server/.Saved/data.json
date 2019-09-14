@@ -1,0 +1,424 @@
+{
+  "destinations": [
+    {
+      "description": "Amsterdam, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "Amsterdam",
+      "pictures": [
+        {
+          "src": "https://picsum.photos/id/769/300/150",
+          "description": "Amsterdam parliament building"
+        }
+      ]
+    },
+    {
+      "description": "Geneva, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "Geneva",
+      "pictures": [
+        {
+          "src": "https://picsum.photos/id/766/300/150",
+          "description": "Geneva parliament building"
+        }
+      ]
+    },
+    {
+      "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "Chamonix",
+      "pictures": [
+        {
+          "src": "https://picsum.photos/id/767/300/150",
+          "description": "Chamonix parliament building"
+        }
+      ]
+    },
+    {
+      "description": "Saint Petersburg, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "Saint Petersburg",
+      "pictures": [
+        {
+          "src": "https://picsum.photos/id/768/300/150",
+          "description": "Saint Petersburg parliament building"
+        }
+      ]
+    },
+    {
+      "description": "airport, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "airport",
+      "pictures": [
+        {
+          "src": "https://picsum.photos/id/769/300/150",
+          "description": "airport parliament building"
+        }
+      ]
+    },
+    {
+      "description": "hotel, is a beautiful city, a true asian pearl, with crowded streets.",
+      "name": "hotel",
+      "pictures": [
+        {
+          "src": "https://picsum.photos/id/770/300/150",
+          "description": "hotel parliament building"
+        }
+      ]
+    }
+  ],
+  "points": [
+    {
+      "base_price": 1100,
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
+      "destination": {
+        "description": "ChamonixЧЧЧЧЧЧЧ, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Chamonix",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/781/300/150",
+            "description": "Chamonix parliament building"
+          },
+          {
+            "src": "https://picsum.photos/id/772/300/150",
+            "description": "Amsterdam parliament building"
+          }
+        ]
+      },
+      "id": "0",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    },
+    {
+      "base_price": 100,
+      "date_from": "2019-08-10T22:55:56.845Z",
+      "date_to": "2019-08-11T11:22:13.375Z",
+      "destination": {
+        "description": "Amsterdam, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Amsterdam",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/783/300/150",
+            "description": "Amsterdam parliament building"
+          }
+        ]
+      },
+      "id": "1",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class 111",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station 111",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one 111",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex 111",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    },
+    {
+      "base_price": 1100,
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
+      "destination": {
+        "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Chamonix",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/764/300/150",
+            "description": "Chamonix parliament building"
+          }
+        ]
+      },
+      "id": "2",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class 222",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station 222",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one 222",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex 222",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    },
+    {
+      "base_price": 1100,
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
+      "destination": {
+        "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Chamonix",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/765/300/150",
+            "description": "Chamonix parliament building"
+          }
+        ]
+      },
+      "id": "3",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class 333",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station 333",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one 333",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex 333",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    },
+    {
+      "base_price": 1100,
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
+      "destination": {
+        "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Chamonix",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/766/300/150",
+            "description": "Chamonix parliament building"
+          }
+        ]
+      },
+      "id": "4",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class 444",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station 444",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one 444",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex 444",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    },
+    {
+      "base_price": 1100,
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
+      "destination": {
+        "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Chamonix",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/767/300/150",
+            "description": "Chamonix parliament building"
+          }
+        ]
+      },
+      "id": "5",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class 555",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station 555",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one 555",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex 555",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    },
+    {
+      "base_price": 1100,
+      "date_from": "2019-07-10T22:55:56.845Z",
+      "date_to": "2019-07-11T11:22:13.375Z",
+      "destination": {
+        "description": "Chamonix, is a beautiful city, a true asian pearl, with crowded streets.",
+        "name": "Chamonix",
+        "pictures": [
+          {
+            "src": "https://picsum.photos/id/767/300/150",
+            "description": "Chamonix parliament building"
+          }
+        ]
+      },
+      "id": "6",
+      "is_favorite": false,
+      "offers": [
+        {
+          "type": "taxi",
+          "offers": [
+            {
+              "name": "Upgrade to a business class 666",
+              "price": 120
+            },
+            {
+              "name": "Choose the radio station 666",
+              "price": 60
+            }
+          ]
+        },
+        {
+          "type": "bus",
+          "offers": [
+            {
+              "name": "Get a BIG one 666",
+              "price": 120
+            },
+            {
+              "name": "Choose the driver sex 666",
+              "price": 600
+            }
+          ]
+        }
+      ],
+      "type": "bus"
+    }
+  ],
+  "offers": [
+    {
+      "id": "add-luggage",
+      "name": "Add luggage",
+      "price": 10,
+      "selected": true
+    },
+    {
+      "id": "switch-to-comfort-class",
+      "name": "Switch to comfort class",
+      "price": 150,
+      "selected": false
+    },
+    {
+      "id": "Add-meal",
+      "name": "Add meal",
+      "price": 2,
+      "selected": false
+    },
+    {
+      "id": "Choose-seats",
+      "name": "Choose seats",
+      "price": 9,
+      "selected": true
+    },
+    {
+      "id": "Travel-by-train",
+      "name": "Travel by train",
+      "price": 40,
+      "selected": false
+    }
+  ]
+}

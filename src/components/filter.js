@@ -13,14 +13,7 @@ export class Filter extends AbstractComponent {
     this.element.addEventListener(`click`, (evt) => {
       evt.stopPropagation();
       if (evt.target.tagName === `INPUT`) {
-        this._tripController.filtering.emit(evt.target.value);
-        /* switch (evt.target.value) {
-          case FilterValues.everything:
-            break;
-
-          default:
-            break;
-        } */
+        this._tripController.emit(evt.target.value);
       }
     });
   }

@@ -1,6 +1,5 @@
 import {AbstractComponent} from './AbstractComponent';
-import {formatDate, FLATPICKR_DATE_FORMAT} from '../utils';
-import {arrPlaces} from '../data/places';
+import {formatDate, FLATPICKR_DATE_FORMAT, Observer} from '../utils';
 import {arrEventTypes} from '../data/event-types';
 import {arrOffers} from '../data/offers';
 import {loremIpsum} from '../data/event';
@@ -10,7 +9,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
 export class EventEdit extends AbstractComponent {
-  constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}) {
+  constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}, arrPlaces) {
     super();
     this._type = type;
     this._typeSelected = undefined;
@@ -20,27 +19,22 @@ export class EventEdit extends AbstractComponent {
     this._duration = duration;
     this._price = price;
     this._offers = offers;
-    this._photos = photos;
-
+    this._photos = photos.map((photo) => photo.src);
     this._favorite = favorite;
 
-    this._subscribtions = [];
+    this._arrPlaces = arrPlaces;
+
+    this.observer = new Observer();
 
     this.init();
   }
 
   _subscribe(event, func) {
-    this._subscribtions.push(
-        {event, func}
-    );
+    this.observer.subscribe(event, func);
   }
 
-  emit(event) {
-    this._subscribtions
-      .filter((subscr) => subscr.event === event)
-      .forEach((subscr) => {
-        subscr.func();
-      });
+  _emit(event) {
+    this.observer.emit(event);
   }
 
   init() {
@@ -58,13 +52,13 @@ export class EventEdit extends AbstractComponent {
 
       // if type modified
       if (!evt.target.checked && this._type.name !== this._typeSelected) {
-        this.emit(`typeModified`);
+        this._emit(`typeModified`);
       }
     });
 
     // if destination changed
     this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
-      this.emit(`placeModified`);
+      this._emit(`placeModified`);
     });
 
     // hide type list when item clicked
@@ -86,13 +80,13 @@ export class EventEdit extends AbstractComponent {
       this._type = arrEventTypes.find((type) => type.name === this._typeSelected);
 
       this._offers = arrOffers.slice(0, Math.floor(Math.random() * 3));
-      this._place = this._place.name ? arrPlaces[Math.floor(Math.random() * arrPlaces.length)] : {name: ``, type: ``};
+      this._place = this._place.name ? this._arrPlaces[Math.floor(Math.random() * this._arrPlaces.length)] : {name: ``, type: ``};
 
       this._eventOffersEl.innerHTML = this.offersTemplate;
       this._eventFieldDestEl.innerHTML = this.destinationTmpl;
 
       this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
-        this.emit(`placeModified`);
+        this._emit(`placeModified`);
       });
     }
   }
@@ -145,14 +139,14 @@ export class EventEdit extends AbstractComponent {
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._place.name}" list="destination-list-1">
       <datalist id="destination-list-1">
-        ${arrPlaces.map((placeItem) => `
+        ${this._arrPlaces.map((placeItem) => `
         <option value="${placeItem.name}"></option>
         `).join(``)}
       </datalist>`;
   }
 
   _onTypeModified() {
-    this.emit(`typeModified`);
+    this._emit(`typeModified`);
   }
 
   get template() {
