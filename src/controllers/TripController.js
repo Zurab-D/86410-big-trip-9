@@ -9,10 +9,12 @@ import {PointController} from './PointController';
 const SHOW_NO_DAY = -1;
 
 export class TripController {
-  constructor(container, events, places, api) {
+  constructor(container, events, places, offers, api) {
     this._container = container;
     this._events = events;
     this._places = places;
+    this._offers = offers;
+
     this._eventsFiltered = this._events;
     this._api = api;
 
@@ -47,7 +49,7 @@ export class TripController {
     render(this.elemTripMain, this._trip.element, Position.afterBegin);
 
     // events for sort elements
-    this._container.querySelectorAll(`div.trip-sort__item>input`).forEach((itemSort) => {
+    this._container.querySelectorAll(`.trip-sort__item>input`).forEach((itemSort) => {
       itemSort.addEventListener(`click`, () => {
         this._sortBy = itemSort.dataset.sort;
 
@@ -90,14 +92,14 @@ export class TripController {
       // get events for current day
       .filter((eventsItem) => showNoDay === SHOW_NO_DAY || eventsItem.dayIndex === dayIndex)
       .forEach((event) => {
-        const pointController = new PointController(eventList, event, this._places, this._onDataChange, this._onChangeView);
+        const pointController = new PointController(eventList, event, this._places, this._offers, this._onDataChange, this._onChangeView);
         this.subscribe(`view`, pointController.setDefaultView.bind(pointController));
       });
   }
 
-  // method: rendfer all events
+  // method: create new event
   createTripEvent() {
-    const pointController = new PointController(this.firstDayEventListElem, null, this._places, this._onDataChange, this._onChangeView);
+    const pointController = new PointController(this.firstDayEventListElem, null, this._places, this._offers, this._onDataChange, this._onChangeView);
     pointController._pointView.element.querySelector(`.event__rollup-btn`).click();
   }
 
@@ -176,7 +178,8 @@ export class TripController {
           this._events.splice(this._events.indexOf(oldData), 1);
           this.renderAllEvents();
           this._reRenderHeader();
-        });
+        })
+        .catch(onError);
     } else if (newData && !oldData) {
       // add event item
       this._api.createPoint({point: newData.toRAW()})
@@ -184,7 +187,8 @@ export class TripController {
           this._events.push(addedEvent);
           this.renderAllEvents();
           this._reRenderHeader();
-        });
+        })
+        .catch(onError);
     }
   }
 

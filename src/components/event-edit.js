@@ -1,8 +1,7 @@
 import {AbstractComponent} from './AbstractComponent';
 import {formatDate, FLATPICKR_DATE_FORMAT, Observer} from '../utils';
 import {arrEventTypes} from '../data/event-types';
-import {arrOffers} from '../data/offers';
-import {loremIpsum} from '../data/event';
+import {ModelOffer} from '../models/model-offer';
 
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -16,7 +15,7 @@ const SubmitTitle = {
 };
 
 export class EventEdit extends AbstractComponent {
-  constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}, arrPlaces) {
+  constructor({type, place, description, dateBegin, duration, price, offers, photos, favorite}, arrPlaces, arrAllOffers) {
     super();
     this._type = type;
     this._typeSelected = undefined;
@@ -30,6 +29,7 @@ export class EventEdit extends AbstractComponent {
     this._favorite = favorite;
 
     this._arrPlaces = arrPlaces;
+    this._arrAllOffers = arrAllOffers;
 
     this.observer = new Observer();
 
@@ -52,6 +52,7 @@ export class EventEdit extends AbstractComponent {
 
     this._eventFieldDestEl = this.element.querySelector(`.event__field-group--destination`);
     this._eventDestinationEl = this.element.querySelector(`.event__section--destination`);
+    this._inputDestinationEl = this.element.querySelector(`.event__input--destination`);
 
     // click event type input
     this._typeElem.addEventListener(`click`, (evt) => {
@@ -71,7 +72,6 @@ export class EventEdit extends AbstractComponent {
     // hide type list when item clicked
     this.element.querySelector(`.event__type-list`).addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `INPUT`) {
-        // evt.preventDefault();
         this._typeElem.click();
       }
     });
@@ -86,11 +86,13 @@ export class EventEdit extends AbstractComponent {
     if (this._typeSelected) {
       this._type = arrEventTypes.find((type) => type.name === this._typeSelected);
 
-      this._offers = arrOffers.slice(0, Math.floor(Math.random() * 3));
-      this._place = this._place.name ? this._arrPlaces[Math.floor(Math.random() * this._arrPlaces.length)] : {name: ``, type: ``};
+      this._offers = this._arrAllOffers.filter((offer) => offer.type === this._type.name.toLowerCase())[0]
+        .offers
+        .map((offer) => new ModelOffer(offer));
 
       this._eventOffersEl.innerHTML = this.offersTemplate;
       this._eventFieldDestEl.innerHTML = this.destinationTmpl;
+      this._inputDestinationEl = this.element.querySelector(`.event__input--destination`);
 
       this.element.querySelector(`.event__input--destination`).addEventListener(`change`, () => {
         this._emit(`placeModified`);
@@ -99,12 +101,9 @@ export class EventEdit extends AbstractComponent {
   }
 
   placeModified() {
-    this._description = loremIpsum.split(`.`).map((str) => str.trim()).filter((str) => str !== ``).sort(() => 0.5 - Math.random()).slice(0, Math.random() * 3 + 1).join(`. `);
-    this._photos = new Array(22).
-      fill().
-      map(() => `http://picsum.photos/300/150?r=${Math.random()}`).
-      sort(() => 0.5 - Math.random()).
-      slice(0, Math.random() * (7 - 2) + 2);
+    const place = this._arrPlaces.find((placeItem) => placeItem.name === this._inputDestinationEl.value);
+    this._description = place.description;
+    this._photos = place.pictures.map((pic) => pic.src);
     this._eventDestinationEl.innerHTML = this.destinationDetailsTemplate;
   }
 
@@ -129,7 +128,13 @@ export class EventEdit extends AbstractComponent {
       <div class="event__available-offers">
       ${this._offers.map((offer) => `
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer" value="${offer.id}" ${offer.selected ? `checked` : ``}>
+          <input
+            class="event__offer-checkbox  visually-hidden"
+            id="event-offer-${offer.id}"
+            type="checkbox"
+            name="event-offer"
+            value="${offer.id}"
+            ${offer.selected ? `checked` : ``}>
           <label class="event__offer-label" for="event-offer-${offer.id}">
             <span class="event__offer-title">${offer.name}</span>
             &plus;

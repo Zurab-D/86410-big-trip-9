@@ -13,8 +13,6 @@ export class StatController {
 
     this._stats = new Statistics();
     this._stats.element.classList.add(`visually-hidden`);
-
-    this._init();
   }
 
   _init() {
@@ -68,8 +66,6 @@ export class StatController {
       return result;
     }, []);
   }
-
-  // event.type.emoji + ` ` +
 
   _destroyMoneyChart() {
     if (this._moneyChart) {
@@ -326,6 +322,7 @@ export class StatController {
   }
 
   show() {
+    this._init();
     this._stats.show();
 
     this._showMoneyChart();

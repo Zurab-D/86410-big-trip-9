@@ -37,7 +37,7 @@ export class EventItem extends AbstractComponent {
 
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${this._offers.map((offer) => `
+        ${this._offers.filter((offer) => offer.selected).slice(0, 3).map((offer) => `
           <li class="event__offer">
           <span class="event__offer-title">${offer.name}</span>
           &plus;
