@@ -1,5 +1,6 @@
 import moment from 'moment';
-import {arrEventTypes} from './data/event-types';
+import {arrEventTypes} from '../data/event-types';
+import {ModelOffer} from './model-offer';
 
 // server data to client data
 export class ModelPoint {
@@ -11,16 +12,7 @@ export class ModelPoint {
     this.dateBegin = moment(data[`date_from`]).toDate().getTime();
     this.duration = moment(data[`date_to`]).toDate().getTime() - this.dateBegin;
     this.price = +data[`base_price`];
-
-    this.offers = data[`offers`]
-      .map((offersItem) => {
-        return {
-          id: (offersItem.name || offersItem.title).toLowerCase().split(` `).join(`-`),
-          name: offersItem.name || offersItem.title,
-          price: offersItem.price,
-          selected: false
-        };
-      });
+    this.offers = data[`offers`].map((offersItem) => new ModelOffer(offersItem));
     this.photos = data[`destination`].pictures;
     this.favorite = data[`is_favorite`];
   }
@@ -52,25 +44,6 @@ export class ModelPoint {
           accepted: offer.selected
         };
       }),
-      /* .reduce((prev, offerItem) => {
-        if (!prev.includes(offerItem.type)) {
-          prev.push(offerItem.type);
-        }
-        return prev;
-      }, [])
-      .reduce((prev, offerType) => {
-        const filteredOffers = this.offers.filter((offer) => offer.type === offerType);
-        prev.push({
-          type: offerType,
-          offers: filteredOffers.map((offerIt) => {
-            return {
-              name: offerIt.name,
-              price: offerIt.price
-            };
-          })
-        });
-        return prev;
-      }, []) */
       type: this.type.name.toLowerCase()
     };
   }

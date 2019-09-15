@@ -1,6 +1,6 @@
-import {ModelPoint} from './model-point';
+import {ModelPoint} from './models/model-point';
 
-const Method = {
+const HTTPMethod = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
@@ -19,7 +19,6 @@ const toJSON = (response) => {
   return response.json();
 };
 
-
 export const API = class {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
@@ -37,10 +36,18 @@ export const API = class {
       .then(toJSON);
   }
 
+  getOffers(type) {
+    return this._load({url: `offers`})
+      .then(toJSON)
+      .then((offers) => offers.filter((offer) => {
+        return offer.type === type || type === undefined;
+      }));
+  }
+
   createPoint({point}) {
     return this._load({
       url: `points`,
-      method: Method.POST,
+      method: HTTPMethod.POST,
       body: JSON.stringify(point),
       headers: new Headers({'Content-Type': `application/json`})
     })
@@ -51,7 +58,7 @@ export const API = class {
   updatePoint({id, data}) {
     return this._load({
       url: `points/${id}`,
-      method: Method.PUT,
+      method: HTTPMethod.PUT,
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`})
     })
@@ -60,10 +67,10 @@ export const API = class {
   }
 
   deletePoint({id}) {
-    return this._load({url: `points/${id}`, method: Method.DELETE});
+    return this._load({url: `points/${id}`, method: HTTPMethod.DELETE});
   }
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+  _load({url, method = HTTPMethod.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
