@@ -1,6 +1,8 @@
 import {render, Position} from './utils';
 
 import {API} from './api';
+import {Store} from './store.js';
+import {Provider} from './provider.js';
 
 import {Menu} from './components/menu';
 import {Filter} from './components/filter';
@@ -9,11 +11,15 @@ import {Sort} from './components/sort';
 import {TripController} from './controllers/TripController';
 import {StatController} from './controllers/StatsController';
 
+const OFFLINE_TITLE = `[OFFLINE]`;
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 // const END_POINT = `http://localhost:3003`;  // for json-server
+const STORE_KEY = `store-key-big-rtip-v.1`;
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const store = new Store(STORE_KEY, localStorage);
+const provider = new Provider(api, store);
 
 const pageBody = document.querySelector(`.page-body`);
 const elemTripMain = pageBody.querySelector(`.trip-main`);
@@ -23,11 +29,20 @@ const elemPageMain = pageBody.querySelector(`.page-main`);
 const elemTripEvents = elemPageMain.querySelector(`.trip-events`);
 const elemTripDays = elemTripEvents.querySelector(`.trip-days`);
 
-api.getDestinations()
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title}${OFFLINE_TITLE}`;
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(OFFLINE_TITLE)[0];
+  provider.syncPoints();
+});
+
+provider.getDestinations()
   .then((arrPlaces) => {
-    api.getPoints()
+    provider.getPoints()
       .then((arrTripEvents) => {
-        api.getOffers()
+        provider.getOffers()
           .then((arrOffers) => {
             // menu
             const menu = new Menu();
@@ -42,7 +57,7 @@ api.getDestinations()
             const statController = new StatController(elemTripEvents, arrTripEvents);
 
             // whole trip
-            const tripController = new TripController(pageBody, arrTripEvents, arrPlaces, arrOffers, api);
+            const tripController = new TripController(pageBody, arrTripEvents, arrPlaces, arrOffers, provider);
             tripController.init();
 
             // filters
