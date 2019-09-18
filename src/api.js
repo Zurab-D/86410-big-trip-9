@@ -70,6 +70,16 @@ export const API = class {
     return this._load({url: `points/${id}`, method: HTTPMethod.DELETE});
   }
 
+  syncPoints({points}) {
+    return this._load({
+      url: `points/sync`,
+      method: HTTPMethod.POST,
+      body: JSON.stringify(points),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(toJSON);
+  }
+
   _load({url, method = HTTPMethod.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
