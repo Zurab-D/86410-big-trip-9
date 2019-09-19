@@ -15,7 +15,7 @@ const OFFLINE_TITLE = `[OFFLINE]`;
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 // const END_POINT = `http://localhost:3003`;  // for json-server
-const STORE_KEY = `store-key-big-rtip-v.1`;
+const STORE_KEY = `store-key-big-trip-v.1`;
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const store = new Store(STORE_KEY, localStorage);
