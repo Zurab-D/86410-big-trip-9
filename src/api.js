@@ -48,8 +48,7 @@ export const API = class {
     return this._load({
       url: `points`,
       method: HTTPMethod.POST,
-      body: JSON.stringify(point),
-      headers: new Headers({'Content-Type': `application/json`})
+      body: JSON.stringify(point)
     })
       .then(toJSON)
       .then(ModelPoint.parsePoint);
@@ -59,8 +58,7 @@ export const API = class {
     return this._load({
       url: `points/${id}`,
       method: HTTPMethod.PUT,
-      body: JSON.stringify(data),
-      headers: new Headers({'Content-Type': `application/json`})
+      body: JSON.stringify(data)
     })
       .then(toJSON)
       .then(ModelPoint.parsePoint);
@@ -74,13 +72,12 @@ export const API = class {
     return this._load({
       url: `points/sync`,
       method: HTTPMethod.POST,
-      body: JSON.stringify(points),
-      headers: new Headers({'Content-Type': `application/json`})
+      body: JSON.stringify(points)
     })
       .then(toJSON);
   }
 
-  _load({url, method = HTTPMethod.GET, body = null, headers = new Headers()}) {
+  _load({url, method = HTTPMethod.GET, body = null, headers = new Headers({'Content-Type': `application/json`})}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
