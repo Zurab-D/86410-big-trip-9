@@ -69,6 +69,10 @@ export const API = class {
   }
 
   syncPoints({points}) {
+    console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! syncPoints`);
+    console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! syncPoints`);
+    console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! syncPoints`);
+
     return this._load({
       url: `points/sync`,
       method: HTTPMethod.POST,

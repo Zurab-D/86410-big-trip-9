@@ -11,7 +11,7 @@ import {Sort} from './components/sort';
 import {TripController} from './controllers/TripController';
 import {StatController} from './controllers/StatsController';
 
-const OFFLINE_TITLE = `[OFFLINE]`;
+const OFFLINE_TITLE = ` [OFFLINE]`;
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 // const END_POINT = `http://localhost:3003`;  // for json-server
