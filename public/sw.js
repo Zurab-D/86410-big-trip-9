@@ -1,8 +1,8 @@
-const CACHE_NAME = `big0trip-app-v.6`;
+const CACHE_NAME = `big0trip-app-v.7`;
 
 // Настроим кеширование статики во время установки SW.
-self.addEventListener('install', (evt) => {
-  console.log('sw, install', {evt});
+self.addEventListener(`install`, (evt) => {
+  console.log(`sw, install`, {evt});
   // Активация SW не произойдет, пока кеш не будет настроен.
   evt.waitUntil(
     // Открываем наш кеш.
@@ -10,21 +10,37 @@ self.addEventListener('install', (evt) => {
       .then((cache) => {
         // Добавляем в кеш список статических ресурсов.
         return cache.addAll([
-          '/',
-          '/index.html',
-          '/bundle.js'
+          `/`,
+          `/index.html`,
+          `/bundle.js`,
+          `/favicon.ico`,
+          `/css/style.css`,
+          `/img/header-bg.png`,
+          `/img/header-bg@2x.png`,
+          `/img/logo.png`,
+          `/img/icons/bus.png`,
+          `/img/icons/check-in.png`,
+          `/img/icons/drive.png`,
+          `/img/icons/flight.png`,
+          `/img/icons/restaurant.png`,
+          `/img/icons/ship.png`,
+          `/img/icons/sightseeing.png`,
+          `/img/icons/taxi.png`,
+          `/img/icons/train.png`,
+          `/img/icons/transport.png`,
+          `/img/icons/trip.png`,
         ]);
       })
   );
 });
 
-self.addEventListener('activate', (evt) => {
-  console.log('sw', 'activate', {evt});
+self.addEventListener(`activate`, (evt) => {
+  console.log(`sw`, `activate`, {evt});
 });
 
 // Пример аналогичен предыдущему шагу.
-self.addEventListener('fetch', (evt) => {
-  console.log('fetch', {evt, request: evt.request});
+self.addEventListener(`fetch`, (evt) => {
+  console.log(`fetch`, {evt, request: evt.request});
   evt.respondWith(
     caches.match(evt.request)
       .then((response) => {
