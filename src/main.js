@@ -12,7 +12,7 @@ import {TripController} from './controllers/TripController';
 import {StatController} from './controllers/StatsController';
 
 const OFFLINE_TITLE = ` [OFFLINE]`;
-const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
+const AUTHORIZATION = `Basic kTy9gIdsz2317rD-`+(new Date()).getMonth()+(new Date()).getDate();
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 const STORE_KEY = `store-key-big-trip-v.1`;
 
