@@ -139,3 +139,5 @@ export const getDuration = (durationMiliseconds) => {
     diffDuration.hours() + `h ` +
     diffDuration.minutes() + `m`;
 };
+
+export const getMonthDate = () => (new Date()).getMonth() + (new Date()).getDate();

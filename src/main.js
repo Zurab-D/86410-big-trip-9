@@ -1,4 +1,4 @@
-import {render, Position} from './utils';
+import {render, Position, getMonthDate} from './utils';
 
 import {API} from './api';
 import {Store} from './store.js';
@@ -12,7 +12,7 @@ import {TripController} from './controllers/TripController';
 import {StatController} from './controllers/StatsController';
 
 const OFFLINE_TITLE = ` [OFFLINE]`;
-const AUTHORIZATION = `Basic kTy9gIdsz2317rD-`+(new Date()).getMonth()+(new Date()).getDate();
+const AUTHORIZATION = `Basic kTy9gIdsz2317rD-` + getMonthDate();
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 const STORE_KEY = `store-key-big-trip-v.1`;
 
@@ -37,69 +37,79 @@ window.addEventListener(`online`, () => {
   provider.syncPoints();
 });
 
+const arrTripEvents = [];
+const arrPlaces = [];
+const arrOffers = [];
+
 provider.getDestinations()
-  .then((arrPlaces) => {
-    provider.getPoints()
-      .then((arrTripEvents) => {
-        provider.getOffers()
-          .then((arrOffers) => {
-            // menu
-            const menu = new Menu();
-            render(elemTripControlsH, menu.element, Position.afterEnd);
+  .then((places) => {
+    arrPlaces.push(...places);
+    return provider.getPoints();
+  })
+  .then((events) => {
+    arrTripEvents.push(...events);
+    return provider.getOffers();
+  })
+  .then((offers) => {
+    arrOffers.push(...offers);
 
-            // sort
-            const sort = new Sort();
-            render(elemTripDays, sort.element, Position.beforeBegin);
-            sort.element.querySelector(`.trip-sort__item--event>input`).click();
+    // menu
+    const menu = new Menu();
+    render(elemTripControlsH, menu.element, Position.afterEnd);
 
-            // stats
-            const statController = new StatController(elemTripEvents, arrTripEvents);
+    // sort
+    const sort = new Sort();
+    render(elemTripDays, sort.element, Position.beforeBegin);
+    sort.element.querySelector(`.trip-sort__item--event>input`).click();
 
-            // whole trip
-            const tripController = new TripController(pageBody, arrTripEvents, arrPlaces, arrOffers, provider);
-            tripController.init();
+    // stats
+    const statController = new StatController(elemTripEvents, arrTripEvents);
 
-            // filters
-            const filters = new Filter(tripController);
-            render(elemTripControls, filters.element);
+    // whole trip
+    const tripController = new TripController(pageBody, arrTripEvents, arrPlaces, arrOffers, provider);
+    tripController.init();
 
-            // toggle events/stats
-            const menuItems = menu.element.querySelectorAll(`.trip-tabs__btn`);
-            menu.element.addEventListener(`click`, (evt) => {
-              evt.preventDefault();
+    // filters
+    const filters = new Filter(tripController);
+    render(elemTripControls, filters.element);
 
-              if (evt.target.tagName !== `A`) {
-                return;
-              }
+    // toggle events/stats
+    const menuItems = menu.element.querySelectorAll(`.trip-tabs__btn`);
+    menu.element.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
 
-              menuItems.forEach((elem) => {
-                elem.classList.remove(`trip-tabs__btn--active`);
-              });
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
 
-              switch (evt.target === menuItems[0]) {
-                case true:
-                  statController.hide();
-                  filters.show();
-                  tripController.show();
-                  menuItems[0].classList.add(`trip-tabs__btn--active`);
-                  break;
+      menuItems.forEach((elem) => {
+        elem.classList.remove(`trip-tabs__btn--active`);
+      });
 
-                default:
-                  statController.show();
-                  filters.hide();
-                  tripController.hide();
-                  menuItems[1].classList.add(`trip-tabs__btn--active`);
-                  break;
-              }
-            });
+      switch (evt.target === menuItems[0]) {
+        case true:
+          statController.hide();
+          filters.show();
+          tripController.show();
+          menuItems[0].classList.add(`trip-tabs__btn--active`);
+          break;
 
-            // New event
-            elemTripMain
-              .querySelector(`.trip-main__event-add-btn`)
-              .addEventListener(`click`, () => {
-                tripController.createTripEvent();
-              });
-          });
+        default:
+          statController.show();
+          filters.hide();
+          tripController.hide();
+          menuItems[1].classList.add(`trip-tabs__btn--active`);
+          break;
+      }
+    });
+
+    // New event
+    elemTripMain
+      .querySelector(`.trip-main__event-add-btn`)
+      .addEventListener(`click`, () => {
+        tripController.createTripEvent();
       });
   })
-  .catch((err) => console.error(`!!!! ` + err));
+  .catch((err) => {
+    throw err;
+  });
