@@ -2,7 +2,7 @@ const CACHE_NAME = `big0trip-app-v.7`;
 
 // Настроим кеширование статики во время установки SW.
 self.addEventListener(`install`, (evt) => {
-  console.log(`sw, install`, {evt});
+  // console.log(`sw, install`, {evt});
   // Активация SW не произойдет, пока кеш не будет настроен.
   evt.waitUntil(
     // Открываем наш кеш.
@@ -35,16 +35,16 @@ self.addEventListener(`install`, (evt) => {
 });
 
 self.addEventListener(`activate`, (evt) => {
-  console.log(`sw`, `activate`, {evt});
+  // console.log(`sw`, `activate`, {evt});
 });
 
 // Пример аналогичен предыдущему шагу.
 self.addEventListener(`fetch`, (evt) => {
-  console.log(`fetch`, {evt, request: evt.request});
+  // console.log(`fetch`, {evt, request: evt.request});
   evt.respondWith(
     caches.match(evt.request)
       .then((response) => {
-        console.log(`Find in cache`, {response});
+        // console.log(`Find in cache`, {response});
         if (response) {
           return response;
         } else {
