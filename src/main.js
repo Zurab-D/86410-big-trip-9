@@ -11,11 +11,10 @@ import {Sort} from './components/sort';
 import {TripController} from './controllers/TripController';
 import {StatController} from './controllers/StatsController';
 
-const OFFLINE_TITLE = `[OFFLINE]`;
-const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
+const OFFLINE_TITLE = ` [OFFLINE]`;
+const AUTHORIZATION = `Basic kTy9gIdsz2317rD-`+(new Date()).getMonth()+(new Date()).getDate();
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
-// const END_POINT = `http://localhost:3003`;  // for json-server
-const STORE_KEY = `store-key-big-rtip-v.1`;
+const STORE_KEY = `store-key-big-trip-v.1`;
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const store = new Store(STORE_KEY, localStorage);
@@ -93,9 +92,6 @@ provider.getDestinations()
                   break;
               }
             });
-
-            // uncomment this to go to the stats directly
-            // menu.element.querySelectorAll(`.trip-tabs__btn`)[1].click();
 
             // New event
             elemTripMain

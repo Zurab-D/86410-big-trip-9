@@ -90,7 +90,7 @@ export class Provider {
   }
 
   syncPoints() {
-    return this._api.syncPoints(Provider.objectToArray(this._store.getAll()));
+    return this._api.syncPoints({points: Provider.objectToArray(this._store.getAll())});
   }
 
 }

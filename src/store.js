@@ -7,7 +7,7 @@ export class Store {
   // get all data from storage
   getAll() {
     const emptyItems = {};
-    const items = this._storage.getItem(this._storeKey);
+    const items = this._storage.getItem(this._keyStorage);
 
     if (!items) {
       return emptyItems;
@@ -36,7 +36,7 @@ export class Store {
     const items = this.getAll();
     delete items[key];
 
-    this._storage.setItem(this._storeKey, JSON.stringify(items));
+    this._storage.setItem(this._keyStorage, JSON.stringify(items));
   }
 
 }
